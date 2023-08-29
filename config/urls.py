@@ -1,11 +1,3 @@
-# from django.contrib import admin
-# from django.urls import path, include
-#
-# urlpatterns = [
-#     path('admin/', admin.site.urls),
-#     path('accounts/', include('apps.accounts.urls')),
-# ]
-
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include, re_path
@@ -14,6 +6,8 @@ from django.urls.conf import include, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+from apps.accounts.views import activation_view
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,4 +31,5 @@ urlpatterns = [
     path("api/v1/", include("apps.accounts.urls")),
     path("api/v1/", include("djoser.urls")),
     path("api/v1/", include("djoser.urls.jwt")),
+    path('auth/activation/<str:uid>/<str:token>/', activation_view, name='activation_view'),
 ]
