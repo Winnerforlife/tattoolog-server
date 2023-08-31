@@ -13,7 +13,7 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(CustomUser)
 class UserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'role')}),
         (_('Personal Info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin',)}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),

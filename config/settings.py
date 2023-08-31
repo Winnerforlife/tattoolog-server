@@ -158,7 +158,7 @@ DJOSER = {
         "your redirect url",
     ],
     "SERIALIZERS": {
-        "user_create": "apps.accounts.serializers.UserCreateSerializer",  # custom serializer
+        "user_create": "apps.accounts.serializers.CustomUserCreateSerializer",  # custom serializer
         "user": "djoser.serializers.UserSerializer",
         "current_user": "djoser.serializers.UserSerializer",
         "user_delete": "djoser.serializers.UserSerializer",
