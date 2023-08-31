@@ -1,4 +1,5 @@
 import requests
+
 from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
 from django.conf import settings

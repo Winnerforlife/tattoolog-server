@@ -7,6 +7,10 @@ from apps.accounts.managers import CustomUserManager
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    ROLE_CHOICES = (
+        ('master', 'Mater'),
+        ('salon', 'Salon'),
+    )
     email = models.EmailField(max_length=255, unique=True)
     username = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
@@ -15,11 +19,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=timezone.now)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, null=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "role"]
 
     def get_full_name(self):
         return f"{self.first_name} - {self.last_name}"
