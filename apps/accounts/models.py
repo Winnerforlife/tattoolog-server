@@ -1,7 +1,7 @@
 from django.utils import timezone
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.managers import CustomUserManager
 
@@ -43,9 +43,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('canceled', 'Canceled'),
+    )
     user = models.OneToOneField(
         'accounts.CustomUser',
         on_delete=models.CASCADE,
         related_name='profile',
         primary_key=True
     )
+    avatar = models.ImageField(_("Avatar"), upload_to="users/avatars", null=True, blank=True)
+    salons_and_masters = models.ManyToManyField(
+        'accounts.CustomUser',
+        related_name='profile_salons_and_masters',
+        verbose_name=_("Salons/Masters"),
+        blank=True
+    )
+    about = models.TextField(_("About me"), default='', blank=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return self.user.get_full_name()

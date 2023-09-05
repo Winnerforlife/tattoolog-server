@@ -7,7 +7,7 @@ from apps.accounts.models import Profile, CustomUser
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    pass
+    fields = ('avatar', 'salons_and_masters', 'about', 'status')
 
 
 @admin.register(CustomUser)
@@ -15,7 +15,7 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password', 'role')}),
         (_('Personal Info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin',)}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_admin',)
