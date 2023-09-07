@@ -1,6 +1,3 @@
-import base64
-import tempfile
-
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -19,7 +16,14 @@ class PostViewSetTests(APITestCase):
             'last_name': 'Doe',
             'role': 'salon',
         }
+        self.user_data_2 = {
+            'email': 'piter@example.com',
+            'first_name': 'Piter',
+            'last_name': 'Parker',
+            'role': 'master',
+        }
         self.user = CustomUser.objects.create_user(**self.user_data)
+        self.user_2 = CustomUser.objects.create_user(**self.user_data_2)
 
         self.file_content = b"Test file content"
         self.avatar = SimpleUploadedFile("test_file.png", self.file_content, content_type="image/png")
@@ -31,6 +35,7 @@ class PostViewSetTests(APITestCase):
             'status': 'approved',
         }
         self.profile = Profile.objects.create(**self.profile_data)
+        self.profile.salons_and_masters.add(self.user_2)
 
         self.work_type_data = {
             'name': 'Test name',
@@ -45,45 +50,26 @@ class PostViewSetTests(APITestCase):
         }
         self.post = Post.objects.create(**self.post_data)
 
-        self.uploaded_file = SimpleUploadedFile("test_image.png", self.file_content, content_type="image/png")
-
-    def get_test_mediafile_data(self):
-        with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
-            temp_file.write(b"Test file content")
-            temp_file.seek(0)
-
-            file_content_base64 = base64.b64encode(temp_file.read()).decode('utf-8')
-
-            return {
-                'profile': self.profile.user.id,
-                'description': 'Test Description',
-                'work_type': self.work_type.id,
-                "photo_post": [
-                    {"photo": file_content_base64},
-                ],
-            }
+        self.uploaded_file_1 = SimpleUploadedFile("test_image1.png", self.file_content)
+        self.uploaded_file_2 = SimpleUploadedFile("test_image2.jpg", self.file_content)
 
     def test_create_post(self):
         url = reverse('post-list')
-        # with tempfile.NamedTemporaryFile(suffix='.png') as temp_file:
-        #     temp_file.write(b"Test file content")
-        #     temp_file.seek(0)
-        #
-        # # encoded_image = base64.b64encode(self.uploaded_file.read()).decode('utf-8')
-        # file_content_base64 = base64.b64encode(temp_file.read()).decode('utf-8')
-        # data = {
-        #     'profile': self.profile.user.id,
-        #     'description': 'Test Description',
-        #     'work_type': self.work_type.id,
-        #     "photo_post": [
-        #         {"photo": file_content_base64},
-        #     ],
-        # }
-        data = self.get_test_mediafile_data()
-        response = self.client.post(url, data, format='json')
-        print(response.data)
+        data = {
+                'profile': self.profile.user_id,
+                "photo_post": [
+                    {"photo": self.uploaded_file_1},
+                    {"photo": self.uploaded_file_2}
+                ],
+                'description': 'Test Description',
+                'work_type': self.work_type.id,
+                "created_at": "2023-09-07T11:06:55.038Z",
+            }
+
+        response = self.client.post(url, data, format='multipart')
+        print(f'{response.data} - response.data')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        # self.assertEqual(Post.objects.count(), 2)
+        self.assertEqual(Post.objects.count(), 2)
 
     def test_retrieve_post(self):
         url = reverse('post-detail', args=[self.post.id])

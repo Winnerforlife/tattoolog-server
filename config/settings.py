@@ -1,3 +1,4 @@
+import os.path
 from datetime import timedelta
 import environ
 
@@ -111,13 +112,18 @@ USE_TZ = True
 SITE_ID = 1
 if DEBUG:
     SITE_PROTOCOL = 'http'
+
+    STATIC_URL = '/config/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
+    MEDIA_URL = '/config/uploads/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
 else:
     SITE_PROTOCOL = 'https'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
