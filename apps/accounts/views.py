@@ -14,7 +14,7 @@ domain = Site.objects.get_current().domain
 
 
 def activation_view(request, uid, token):
-    activation_url = f"{settings.SITE_PROTOCOL}://{domain}/api/v1/users/activation/"
+    activation_url = f"{settings.SITE_PROTOCOL}://{domain}/auth/users/activation/"
     data = {"uid": uid, "token": token}
     response = requests.post(activation_url, data=data)
 

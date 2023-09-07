@@ -161,3 +161,4 @@ cython_debug/
 
 # OS or Editor folders
 .DS_Store
+/users/

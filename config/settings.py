@@ -23,6 +23,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'apps.accounts',
+    'apps.portfolio',
 ]
 
 THIRD_PARTY_APPS = [
@@ -152,7 +153,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT", "Bearer"),
+    "AUTH_HEADER_TYPES": ("Bearer",),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
