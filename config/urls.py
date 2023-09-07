@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
@@ -8,6 +10,7 @@ from apps.accounts.views import activation_view
 
 urlpatterns = [
     path("accounts/", include("apps.accounts.urls")),
+    path("portfolio/", include("apps.portfolio.urls")),
 
     path("admin/", admin.site.urls),
     path("api/", include("config.spectacular.urls")),
@@ -18,3 +21,6 @@ urlpatterns = [
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
 ]
+
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
