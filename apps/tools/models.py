@@ -16,7 +16,7 @@ class SocialMedia(models.Model):
     link = models.URLField(_('Social media link'))
 
     def __str__(self):
-        return f"{self.profile.user.get_username()} - {self.social_media_type.name}"
+        return f"{self.profile.user.get_full_name()} - {self.social_media_type.name}"
 
 
 class SocialMediaType(models.Model):

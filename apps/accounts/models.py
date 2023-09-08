@@ -12,7 +12,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         ('salon', 'Salon'),
     )
     email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -28,9 +27,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return f"{self.first_name} - {self.last_name}"
-
-    def get_username(self):
-        return self.username
 
     def has_perm(self, perm, obj=None):
         return True
