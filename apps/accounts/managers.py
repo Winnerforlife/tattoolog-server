@@ -8,7 +8,6 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(
             email=email,
-            username=f"{first_name}_{last_name}",
             first_name=first_name,
             last_name=last_name,
             role=role,
