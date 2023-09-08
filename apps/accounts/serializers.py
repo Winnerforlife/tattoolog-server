@@ -14,6 +14,8 @@ class CustomUserCreateSerializer(UserCreateSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    user = CustomUserCreateSerializer()
+
     class Meta:
         model = Profile
         fields = ("user", "avatar", "salons_and_masters", "about", "status")
