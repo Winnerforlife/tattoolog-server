@@ -19,6 +19,9 @@ class Post(models.Model):
         blank=True
     )
 
+    def __str__(self):
+        return f"({self.profile.user.get_full_name()}) postID-{self.id}"
+
 
 class Photo(models.Model):
     post = models.ForeignKey(
