@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny
@@ -12,6 +13,7 @@ class PostViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
 
+@extend_schema(summary='Retrieving all posts of a specific user.')
 class ProfilePostsApiView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
