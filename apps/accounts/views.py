@@ -4,6 +4,7 @@ from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
@@ -34,3 +35,13 @@ class ProfileViewSet(ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [AllowAny]
+
+
+@extend_schema(summary='Retrieving all profiles of a specific role.')
+class ProfileApiView(ListAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        role = self.kwargs['role']
+        return Profile.objects.filter(user__role=role)
