@@ -7,6 +7,8 @@ class EmailBackend(ModelBackend):
         UserModel = get_user_model()
         try:
             email = kwargs.get('email', None)
+            if email is None:
+                email = kwargs.get('username', None)
             user = UserModel.objects.get(email=email)
             if user.check_password(kwargs.get('password', None)):
                 return user
