@@ -8,6 +8,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
+from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer
 
@@ -37,10 +38,19 @@ class ProfileViewSet(ModelViewSet):
     permission_classes = [AllowAny]
 
 
-@extend_schema(summary='Retrieving all profiles of a specific role.')
+@extend_schema(
+    summary='Retrieving all profiles of a specific role.',
+    description=(
+        'Using optional parameters: **name**, **city**, **country**. You can filter the final result.\n'
+        '* name - filters by the fields first_name and last_name.\n'
+        '* city - filters by the fields first_name and last_name.\n'
+        '* country - filters by the fields first_name and last_name.'
+    )
+)
 class ProfileApiView(ListAPIView):
     serializer_class = ProfileSerializer
     permission_classes = [AllowAny]
+    filterset_class = ProfileFilter
 
     def get_queryset(self):
         role = self.kwargs['role']
