@@ -43,8 +43,8 @@ class ProfileViewSet(ModelViewSet):
     description=(
         'Using optional parameters: **name**, **city**, **country**. You can filter the final result.\n'
         '* name - filters by the fields first_name and last_name.\n'
-        '* city - filters by the fields first_name and last_name.\n'
-        '* country - filters by the fields first_name and last_name.'
+        '* city - filters by the field city.\n'
+        '* country - filters by the field country.'
     )
 )
 class ProfileApiView(ListAPIView):
@@ -53,5 +53,7 @@ class ProfileApiView(ListAPIView):
     filterset_class = ProfileFilter
 
     def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Profile.objects.none()
         role = self.kwargs['role']
         return Profile.objects.filter(user__role=role)

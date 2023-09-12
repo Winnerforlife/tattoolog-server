@@ -6,7 +6,7 @@ from apps.accounts.views import ProfileViewSet, ProfileApiView
 
 router = SimpleRouter()
 
-router.register("profiles", ProfileViewSet, basename="profiles")
+router.register("profile", ProfileViewSet, basename="profile")
 
 urlpatterns = [
     path('profiles/<str:role>/', ProfileApiView.as_view(), name='role-profile-list'),

@@ -20,6 +20,8 @@ urlpatterns = [
     path('auth/activation/<str:uid>/<str:token>/', activation_view, name='activation_view'),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    path('cities_light/api/', include('cities_light.contrib.restframework3')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS)
