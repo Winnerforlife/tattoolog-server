@@ -5,12 +5,14 @@ from rest_framework.permissions import AllowAny
 
 from apps.portfolio.models import Post
 from apps.portfolio.serializers import PostSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class PostViewSet(ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     permission_classes = [AllowAny]
+    parser_classes = (MultiPartParser, FormParser)
 
 
 @extend_schema(summary='Retrieving all posts of a specific user.')
