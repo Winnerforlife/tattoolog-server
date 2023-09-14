@@ -12,6 +12,7 @@ class WorkTypeSerializer(serializers.ModelSerializer):
 
 class PhotoSerializer(serializers.ModelSerializer):
     # photo = Base64ImageField(required=False, allow_null=True)
+    photo = serializers.ImageField(required=False)
 
     class Meta:
         model = Photo
@@ -20,15 +21,14 @@ class PhotoSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     photo_post = PhotoSerializer(many=True, required=False)
-    work_type = WorkTypeSerializer()
+    # work_type = WorkTypeSerializer()
 
     class Meta:
         model = Post
-        fields = ("id", "profile", "photo_post", "work_type", "description", "created_at")
+        fields = ("id", "profile", "photo_post")
 
     def create(self, validated_data):
         print(f"validated_data - {validated_data}")
-        print(f"photo_post - {validated_data.pop('photo_post', [])}")
         photos_data = validated_data.pop('photo_post', [])
         print(f"photos_data - {photos_data}")
         post = Post.objects.create(**validated_data)
@@ -36,3 +36,22 @@ class PostSerializer(serializers.ModelSerializer):
             print(f"photo_data - {photo_data}")
             Photo.objects.create(post=post, **photo_data)
         return post
+
+    # def create(self, validated_data):
+    #     photos_data = validated_data.get('photo_post', [])
+    #     post = Post.objects.create(**validated_data)
+    #     for photo_data in photos_data:
+    #         Photo.objects.create(post=post, **photo_data)
+    #     return post
+
+
+    # def create(self, validated_data):
+    #     print(f"validated_data - {validated_data}")
+    #     print(f"photo_post - {validated_data.pop('photo_post', [])}")
+    #     photos_data = validated_data.pop('photo_post', [])
+    #     print(f"photos_data - {photos_data}")
+    #     post = Post.objects.create(**validated_data)
+    #     for photo_data in photos_data:
+    #         print(f"photo_data - {photo_data}")
+    #         Photo.objects.create(post=post, **photo_data)
+    #     return post
