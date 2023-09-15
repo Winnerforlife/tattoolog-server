@@ -60,6 +60,8 @@ class Profile(models.Model):
     )
     about = models.TextField(_("About me"), default='', blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    country = models.ForeignKey('cities_light.Country', on_delete=models.SET_NULL, null=True, blank=True)
+    city = models.ForeignKey('cities_light.City', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.user.get_full_name()

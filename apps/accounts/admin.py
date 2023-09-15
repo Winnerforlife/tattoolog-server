@@ -7,7 +7,7 @@ from apps.accounts.models import Profile, CustomUser
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    fields = ('avatar', 'salons_and_masters', 'about', 'status')
+    fields = ('avatar', 'salons_and_masters', 'about', 'status', 'country', 'city')
 
 
 @admin.register(CustomUser)

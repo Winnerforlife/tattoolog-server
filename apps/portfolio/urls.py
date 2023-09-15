@@ -1,13 +1,11 @@
 from django.urls import path
 
-from rest_framework.routers import SimpleRouter
+from apps.portfolio.views import PostCreateApiView, ProfilePostsApiView, PhotoCreateView, WorkTypeApiView
 
-from apps.portfolio.views import PostViewSet, ProfilePostsApiView
-
-router = SimpleRouter()
-
-router.register("post", PostViewSet, basename="post")
 
 urlpatterns = [
     path('posts/profile/<int:user_id>/', ProfilePostsApiView.as_view(), name='user-posts-list'),
-] + router.urls
+    path('post-photo/create/', PhotoCreateView.as_view(), name='post-photo'),
+    path('post/create/', PostCreateApiView.as_view(), name='post'),
+    path('work_types/', WorkTypeApiView.as_view(), name='work_types'),
+]
