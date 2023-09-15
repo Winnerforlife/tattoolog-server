@@ -1,18 +1,30 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import ListAPIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 
-from apps.portfolio.models import Post
-from apps.portfolio.serializers import PostSerializer
-from rest_framework.parsers import MultiPartParser, FormParser
+from apps.portfolio.models import Post, Photo, WorkType
+from apps.portfolio.serializers import PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer
 
 
-class PostViewSet(ModelViewSet):
-    serializer_class = PostSerializer
+@extend_schema(summary='Create post for specific user profile.')
+class PostCreateApiView(CreateAPIView):
+    serializer_class = PostCreateSerializer
     queryset = Post.objects.all()
     permission_classes = [AllowAny]
-    parser_classes = (MultiPartParser, FormParser)
+
+
+@extend_schema(summary='Create photos for specific post.')
+class PhotoCreateView(CreateAPIView):
+    serializer_class = PhotoCreateSerializer
+    queryset = Photo.objects.all()
+    permission_classes = [AllowAny]
+
+
+@extend_schema(summary='Retrieving work types.')
+class WorkTypeApiView(ListAPIView):
+    serializer_class = WorkTypeSerializer
+    queryset = WorkType.objects.all()
+    permission_classes = [AllowAny]
 
 
 @extend_schema(summary='Retrieving all posts of a specific user.')

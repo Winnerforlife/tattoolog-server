@@ -1,7 +1,12 @@
-from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from apps.portfolio.models import Post, Photo, WorkType
+
+
+class PhotoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Photo
+        fields = ('id', 'post', 'photo')
 
 
 class WorkTypeSerializer(serializers.ModelSerializer):
@@ -10,48 +15,35 @@ class WorkTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'description')
 
 
-class PhotoSerializer(serializers.ModelSerializer):
-    # photo = Base64ImageField(required=False, allow_null=True)
-    photo = serializers.ImageField(required=False)
-
-    class Meta:
-        model = Photo
-        fields = ('photo',)
-
-
 class PostSerializer(serializers.ModelSerializer):
-    photo_post = PhotoSerializer(many=True, required=False)
-    # work_type = WorkTypeSerializer()
+    post_photo = PhotoSerializer()
+    work_type = WorkTypeSerializer()
 
     class Meta:
         model = Post
-        fields = ("id", "profile", "photo_post")
+        fields = ("id", "profile", "work_type", "post_photo", "created_at")
+
+
+class PhotoCreateSerializer(serializers.ModelSerializer):
+    post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all(), write_only=True)
+    photos = serializers.ListField(child=serializers.ImageField(), write_only=True)
+
+    class Meta:
+        model = Photo
+        fields = ('photos', 'post')
 
     def create(self, validated_data):
-        print(f"validated_data - {validated_data}")
-        photos_data = validated_data.pop('photo_post', [])
-        print(f"photos_data - {photos_data}")
-        post = Post.objects.create(**validated_data)
-        for photo_data in photos_data:
-            print(f"photo_data - {photo_data}")
-            Photo.objects.create(post=post, **photo_data)
-        return post
-
-    # def create(self, validated_data):
-    #     photos_data = validated_data.get('photo_post', [])
-    #     post = Post.objects.create(**validated_data)
-    #     for photo_data in photos_data:
-    #         Photo.objects.create(post=post, **photo_data)
-    #     return post
+        photos_data = validated_data.pop("photos")
+        post_photos = [
+            Photo(photo=photo, **validated_data)
+            for photo in photos_data
+        ]
+        return Photo.objects.bulk_create(post_photos)
 
 
-    # def create(self, validated_data):
-    #     print(f"validated_data - {validated_data}")
-    #     print(f"photo_post - {validated_data.pop('photo_post', [])}")
-    #     photos_data = validated_data.pop('photo_post', [])
-    #     print(f"photos_data - {photos_data}")
-    #     post = Post.objects.create(**validated_data)
-    #     for photo_data in photos_data:
-    #         print(f"photo_data - {photo_data}")
-    #         Photo.objects.create(post=post, **photo_data)
-    #     return post
+class PostCreateSerializer(serializers.ModelSerializer):
+    work_type = serializers.PrimaryKeyRelatedField(queryset=WorkType.objects.all(), required=False)
+
+    class Meta:
+        model = Post
+        fields = ("id", "profile", "description", "work_type", "created_at")
