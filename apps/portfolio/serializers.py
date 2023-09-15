@@ -16,12 +16,12 @@ class WorkTypeSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    post_photo = PhotoSerializer()
+    photo_post = PhotoSerializer(many=True)
     work_type = WorkTypeSerializer()
 
     class Meta:
         model = Post
-        fields = ("id", "profile", "work_type", "post_photo", "created_at")
+        fields = ("id", "profile", "work_type", "photo_post", "created_at")
 
 
 class PhotoCreateSerializer(serializers.ModelSerializer):
