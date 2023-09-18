@@ -38,6 +38,14 @@ shell:
 run:
 	$(PYTHON_MANAGE) runserver 0.0.0.0:8000
 
+# Принять все страны и города из модуля django-cities-light
+cities:
+	$(PYTHON_MANAGE) cities_light
+
+# Добавить зависимости в requirements.txt
+freeze:
+	pip freeze > requirements.txt
+
 # Помощь (список доступных команд)
 help:
 	@echo "Доступные команды:"
@@ -50,3 +58,5 @@ help:
 	@echo "  createsuperuser    - Создать административного пользователя (superuser)"
 	@echo "  run                - Запустить Django-сервер"
 	@echo "  shell              - Открыть backend shell"
+	@echo "  cities             - Принять все страны и города из модуля django-cities-light"
+	@echo "  freeze             - Добавить зависимости в requirements.txt"
