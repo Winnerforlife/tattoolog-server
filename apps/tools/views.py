@@ -1,11 +1,26 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
-from cities_light.models import City
+from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 
-from apps.tools.filters import CityLightFilter
-from apps.tools.serializers import CitySerializer
+from apps.tools.filters import CityLightFilter, CountryLightFilter
+from apps.tools.serializers import CitySerializer, CountrySerializer
 from apps.tools.utils import CustomPagination
+
+
+@extend_schema(
+    summary='Retrieving all countries.',
+    description=(
+        'Using optional parameters: **country**. You can filter the final result.\n'
+        '* country - filters by the country name.'
+    )
+)
+class CountryFilterView(generics.ListAPIView):
+    queryset = Country.objects.all()
+    serializer_class = CountrySerializer
+    permission_classes = [AllowAny]
+    filterset_class = CountryLightFilter
+    pagination_class = CustomPagination
 
 
 @extend_schema(
@@ -16,7 +31,7 @@ from apps.tools.utils import CustomPagination
         '* country - filters by the country name.'
     )
 )
-class CountryFilterView(generics.ListAPIView):
+class CityFilterView(generics.ListAPIView):
     queryset = City.objects.all()
     serializer_class = CitySerializer
     permission_classes = [AllowAny]
