@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.accounts.managers import CustomUserManager
 
@@ -62,6 +63,8 @@ class Profile(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     country = models.ForeignKey('cities_light.Country', on_delete=models.SET_NULL, null=True, blank=True)
     city = models.ForeignKey('cities_light.City', on_delete=models.SET_NULL, null=True, blank=True)
+    birthday = models.DateField(_('Birthday'), null=True, blank=True)
+    phone_number = PhoneNumberField(blank=True)
 
     def __str__(self):
         return self.user.get_full_name()
