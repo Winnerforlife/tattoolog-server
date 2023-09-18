@@ -15,7 +15,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         fields = ("id", "email", "first_name", "last_name", "password", "role")
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class ProfileFilterSerializer(serializers.ModelSerializer):
     user = CustomUserCreateSerializer()
     city = serializers.SerializerMethodField()
     country = serializers.SerializerMethodField()
@@ -29,3 +29,11 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_country(self, obj) -> Optional[str]:
         return obj.country.name if obj.country else None
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    user = CustomUserCreateSerializer()
+
+    class Meta:
+        model = Profile
+        fields = ("user", "avatar", "salons_and_masters", "about", "status", "country", "city")

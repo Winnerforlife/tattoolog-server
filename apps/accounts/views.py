@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
-from apps.accounts.serializers import ProfileSerializer
+from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer
 
 domain = Site.objects.get_current().domain
 
@@ -48,7 +48,7 @@ class ProfileViewSet(ModelViewSet):
     )
 )
 class ProfileApiView(ListAPIView):
-    serializer_class = ProfileSerializer
+    serializer_class = ProfileFilterSerializer
     permission_classes = [AllowAny]
     filterset_class = ProfileFilter
 
