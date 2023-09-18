@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 
 from apps.tools.filters import CityLightFilter
 from apps.tools.serializers import CitySerializer
+from apps.tools.utils import CustomPagination
 
 
 @extend_schema(
@@ -20,3 +21,4 @@ class CountryFilterView(generics.ListAPIView):
     serializer_class = CitySerializer
     permission_classes = [AllowAny]
     filterset_class = CityLightFilter
+    pagination_class = CustomPagination
