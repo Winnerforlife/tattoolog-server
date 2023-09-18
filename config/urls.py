@@ -11,6 +11,7 @@ from apps.accounts.views import activation_view
 urlpatterns = [
     path("accounts/", include("apps.accounts.urls")),
     path("portfolio/", include("apps.portfolio.urls")),
+    path("tools/", include("apps.tools.urls")),
 
     path("admin/", admin.site.urls),
     path("api/", include("config.spectacular.urls")),
