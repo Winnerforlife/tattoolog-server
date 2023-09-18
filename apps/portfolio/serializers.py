@@ -31,6 +31,7 @@ class PhotoCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Photo
         fields = ('photos', 'post')
+        extra_kwargs = {'photos': {'required': True}}
 
     def create(self, validated_data):
         photos_data = validated_data.pop("photos")
