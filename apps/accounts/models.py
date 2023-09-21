@@ -63,6 +63,7 @@ class Profile(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     country = models.ForeignKey('cities_light.Country', on_delete=models.SET_NULL, null=True, blank=True)
     city = models.ForeignKey('cities_light.City', on_delete=models.SET_NULL, null=True, blank=True)
+    address = models.CharField(default="", blank=True, max_length=255)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
     phone_number = PhoneNumberField(blank=True)
 

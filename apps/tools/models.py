@@ -13,7 +13,7 @@ class SocialMedia(models.Model):
         on_delete=models.CASCADE,
         related_name='social_media_type',
     )
-    link = models.URLField(_('Social media link'))
+    link = models.URLField(_('Social media link'), null=True, blank=True)
 
     def __str__(self):
         return f"{self.profile.user.get_full_name()} - {self.social_media_type.name}"

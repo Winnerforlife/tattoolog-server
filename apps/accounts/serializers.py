@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.accounts.models import Profile
+from apps.tools.models import SocialMedia
+from apps.tools.serializers import SocialMediaSerializer
 
 User = get_user_model()
 
@@ -33,6 +35,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserCreateSerializer()
+    social_media_profile = SocialMediaSerializer(many=True)
 
     class Meta:
         model = Profile
@@ -45,5 +48,21 @@ class ProfileSerializer(serializers.ModelSerializer):
             "country",
             "city",
             "birthday",
-            "phone_number"
+            "phone_number",
+            "social_media_profile"
         )
+
+    def update(self, instance, validated_data):
+        social_media_data = validated_data.pop('social_media_profile', [])
+        instance.save()
+
+        for social_media in social_media_data:
+            social_media_type_name = social_media['social_media_type']['name']
+            link = social_media['link']
+            social_media_obj, created = SocialMedia.objects.get_or_create(
+                profile=instance, social_media_type__name=social_media_type_name
+            )
+            social_media_obj.link = link
+            social_media_obj.save()
+
+        return instance

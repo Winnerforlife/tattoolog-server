@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             name='SocialMedia',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('link', models.URLField(verbose_name='Social media link')),
+                ('link', models.URLField(blank=True, null=True, verbose_name='Social media link')),
                 ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='social_media_profile', to='accounts.profile')),
                 ('social_media_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='social_media_type', to='tools.socialmediatype')),
             ],
