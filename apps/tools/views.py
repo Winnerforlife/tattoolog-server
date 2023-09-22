@@ -3,8 +3,9 @@ from rest_framework import generics
 from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 
+from apps.accounts.models import Profile
 from apps.tools.filters import CityLightFilter, CountryLightFilter
-from apps.tools.serializers import CitySerializer, CountrySerializer
+from apps.tools.serializers import CitySerializer, CountrySerializer, CRMIntegrationProfiles
 from apps.tools.utils import CustomPagination
 
 
@@ -37,3 +38,16 @@ class CityFilterView(generics.ListAPIView):
     permission_classes = [AllowAny]
     filterset_class = CityLightFilter
     pagination_class = CustomPagination
+
+
+@extend_schema(
+    summary='Retrieving profiles for copy to CRM by date.',
+    description=(
+        'Using parameters: **date**. You can filter the final result\n'
+        'and resieve objects from input date to actually date.'
+    )
+)
+class CRMIntegrationProfilesAPIView(generics.ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = CRMIntegrationProfiles
+    permission_classes = [AllowAny]
