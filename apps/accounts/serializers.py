@@ -59,12 +59,18 @@ class ProfileSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        user_data = validated_data.pop('user', {})
-        instance.user.first_name = user_data.get('first_name', instance.user.first_name)
-        instance.user.last_name = user_data.get('last_name', instance.user.last_name)
-        instance.user.save()
+        self.update_user(instance.user, validated_data.pop('user', None))
+        self.update_social_media_profiles(instance, validated_data.pop('social_media_profile', []))
+        instance = super().update(instance, validated_data)
+        return instance
 
-        social_media_data = validated_data.pop('social_media_profile', [])
+    def update_user(self, user, user_data):
+        if user_data:
+            for key, value in user_data.items():
+                setattr(user, key, value)
+            user.save()
+
+    def update_social_media_profiles(self, instance, social_media_data):
         for social_media in social_media_data:
             social_media_type_name = social_media['social_media_type']['name']
             link = social_media['link']
@@ -73,6 +79,3 @@ class ProfileSerializer(serializers.ModelSerializer):
             )
             social_media_obj.link = link
             social_media_obj.save()
-
-        instance.save()
-        return instance
