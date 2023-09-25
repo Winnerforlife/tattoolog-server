@@ -4,8 +4,8 @@ from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter
-from apps.tools.models import Partners
-from apps.tools.serializers import CityCustomSerializer, CountryCustomSerializer, PartnersSerializer
+from apps.tools.models import Partners, Blog
+from apps.tools.serializers import CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, BlogSerializer
 from apps.tools.utils import CustomPagination
 
 
@@ -46,4 +46,22 @@ class CityFilterView(generics.ListAPIView):
 class PartnersView(generics.ListAPIView):
     queryset = Partners.objects.all()
     serializer_class = PartnersSerializer
+    permission_classes = [AllowAny]
+
+
+@extend_schema(
+    summary='Retrieving all blog objects.',
+)
+class BlogListView(generics.ListAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
+    permission_classes = [AllowAny]
+
+
+@extend_schema(
+    summary='Retrieving detail blog object.',
+)
+class BlogDetailView(generics.RetrieveAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
     permission_classes = [AllowAny]
