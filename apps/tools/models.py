@@ -24,3 +24,12 @@ class SocialMediaType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Partners(models.Model):
+    name = models.CharField(_('Partner name'), max_length=128)
+    logo = models.ImageField(_('Logo'), upload_to="partners/logo")
+    link = models.URLField(_('Partner link'), null=True, blank=True)
+
+    def __str__(self):
+        return self.name
