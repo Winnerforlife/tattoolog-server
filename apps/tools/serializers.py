@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from cities_light.models import City, Country
 
-from apps.tools.models import SocialMediaType, SocialMedia
+from apps.tools.models import SocialMediaType, SocialMedia, Partners
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -30,3 +30,9 @@ class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
         fields = ('social_media_type', 'link')
+
+
+class PartnersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Partners
+        fields = ('name', 'logo', 'link')
