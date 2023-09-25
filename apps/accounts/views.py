@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
-from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer
+from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer, CRMIntegrationProfiles
 
 domain = Site.objects.get_current().domain
 
@@ -57,3 +57,16 @@ class ProfileApiView(ListAPIView):
             return Profile.objects.none()
         role = self.kwargs['role']
         return Profile.objects.filter(user__role=role)
+
+
+@extend_schema(
+    summary='Retrieving all profiles for CRM integration.',
+    description=(
+        'Using optional parameter: **date**. You can filter the final result.\n'
+        '* date - filters by the date create account from input date to today.'
+    )
+)
+class CRMIntegrationProfilesAPIView(ListAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = CRMIntegrationProfiles
+    permission_classes = [AllowAny]

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import CountryFilterView, CityFilterView
+from apps.tools.views import CountryFilterView, CityFilterView
 
 urlpatterns = [
     path('cities/', CityFilterView.as_view(), name='city-list'),

@@ -4,14 +4,14 @@ from cities_light.models import City, Country
 from apps.tools.models import SocialMediaType, SocialMedia
 
 
-class CountrySerializer(serializers.ModelSerializer):
+class CountryCustomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Country
         fields = ('id', 'name')
 
 
-class CitySerializer(serializers.ModelSerializer):
-    country = CountrySerializer()
+class CityCustomSerializer(serializers.ModelSerializer):
+    country = CountryCustomSerializer()
 
     class Meta:
         model = City

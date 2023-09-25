@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.accounts.models import Profile, CustomUser
+from apps.portfolio.serializers import PostSerializer
 from apps.tools.models import SocialMedia
 from apps.tools.serializers import SocialMediaSerializer
 
@@ -17,14 +18,14 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         fields = ("id", "email", "first_name", "last_name", "password", "role")
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ("id", "email", "first_name", "last_name", "role")
 
 
 class ProfileFilterSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = CustomUserSerializer()
     city = serializers.SerializerMethodField()
     country = serializers.SerializerMethodField()
 
@@ -40,7 +41,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = CustomUserSerializer()
     social_media_profile = SocialMediaSerializer(many=True)
 
     class Meta:
@@ -79,3 +80,35 @@ class ProfileSerializer(serializers.ModelSerializer):
             )
             social_media_obj.link = link
             social_media_obj.save()
+
+
+class CRMIntegrationProfiles(serializers.ModelSerializer):
+    """
+        Сериализатор для данных которые будут переданы в ЦРМ, для создания кандидата
+
+        first_name
+        last_name
+        email
+        images
+        about_candidate
+        social_media_link
+        phone
+    """
+    user = CustomUserSerializer()
+    social_media_profile = SocialMediaSerializer(many=True)
+    post_profile = PostSerializer(many=True)
+
+    class Meta:
+        model = Profile
+        fields = ('user', 'post_profile', 'about', 'social_media_profile', 'phone_number')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+
+        all_photos = []
+        for post_data in data['post_profile']:
+            all_photos.extend(post_data.pop('photo_post', []))
+
+        data['post_profile'] = all_photos
+
+        return data

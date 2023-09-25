@@ -4,7 +4,7 @@ from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter
-from apps.tools.serializers import CitySerializer, CountrySerializer
+from apps.tools.serializers import CityCustomSerializer, CountryCustomSerializer
 from apps.tools.utils import CustomPagination
 
 
@@ -17,7 +17,7 @@ from apps.tools.utils import CustomPagination
 )
 class CountryFilterView(generics.ListAPIView):
     queryset = Country.objects.all()
-    serializer_class = CountrySerializer
+    serializer_class = CountryCustomSerializer
     permission_classes = [AllowAny]
     filterset_class = CountryLightFilter
     pagination_class = CustomPagination
@@ -33,7 +33,7 @@ class CountryFilterView(generics.ListAPIView):
 )
 class CityFilterView(generics.ListAPIView):
     queryset = City.objects.all()
-    serializer_class = CitySerializer
+    serializer_class = CityCustomSerializer
     permission_classes = [AllowAny]
     filterset_class = CityLightFilter
     pagination_class = CustomPagination
