@@ -1,6 +1,7 @@
 from django.contrib import admin
+from django.utils.translation import gettext_lazy as _
 
-from apps.tools.models import SocialMedia, SocialMediaType, Partners
+from apps.tools.models import SocialMedia, SocialMediaType, Partners, Blog
 
 
 @admin.register(SocialMedia)
@@ -17,3 +18,13 @@ class SocialMediaTypeAdmin(admin.ModelAdmin):
 class PartnersAdmin(admin.ModelAdmin):
     pass
 
+
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    fieldsets = (
+        (_('Blog'), {'fields': ('image', 'title', 'body', 'created_at')}),
+        (_('SEO Meta'), {'fields':
+                             ('slug', 'meta_title_tag', 'meta_description', 'meta_keywords', 'opengraph_title',
+                              'opengraph_description')
+                         }),
+    )

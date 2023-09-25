@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from cities_light.models import City, Country
 
-from apps.tools.models import SocialMediaType, SocialMedia, Partners
+from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -36,3 +36,21 @@ class PartnersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partners
         fields = ('name', 'logo', 'link')
+
+
+class BlogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blog
+        fields = (
+            'id',
+            'image',
+            'title',
+            'body',
+            'created_at',
+            'slug',
+            'meta_title_tag',
+            'meta_description',
+            'meta_keywords',
+            'opengraph_title',
+            'opengraph_description'
+        )
