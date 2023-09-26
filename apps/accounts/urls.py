@@ -10,5 +10,5 @@ router.register("profile", ProfileViewSet, basename="profile")
 
 urlpatterns = [
     path('profiles/<str:role>/', ProfileApiView.as_view(), name='role-profile-list'),
-    path('integrationCRM/', CRMIntegrationProfilesAPIView.as_view(), name='integration-crm'),
+    path('integrationCRM/<str:date>/', CRMIntegrationProfilesAPIView.as_view(), name='integration-crm'),
 ] + router.urls
