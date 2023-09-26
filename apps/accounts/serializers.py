@@ -56,7 +56,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             "city",
             "birthday",
             "phone_number",
-            "social_media_profile"
+            "social_media_profile",
+            "count_visit"
         )
 
     def update(self, instance, validated_data):

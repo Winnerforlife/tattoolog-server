@@ -8,6 +8,8 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
@@ -37,6 +39,21 @@ class ProfileViewSet(ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
     permission_classes = [AllowAny]
+
+    @action(detail=True, methods=['GET'])
+    def retrieve_profile(self, request, pk=None):
+        profile = self.get_object()
+        current_user = request.user
+        if profile.user != current_user:
+            profile.count_visit += 1
+            profile.save()
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
+
+    def retrieve(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            return self.retrieve_profile(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
 
 @extend_schema(
