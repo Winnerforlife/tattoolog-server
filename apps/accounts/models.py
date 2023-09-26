@@ -52,7 +52,7 @@ class Profile(models.Model):
         primary_key=True
     )
     avatar = models.ImageField(_("Avatar"), upload_to="users/avatars", null=True, blank=True)
-    # count_visit = models.PositiveSmallIntegerField(_('Count visit'), default=0)
+    count_visit = models.PositiveSmallIntegerField(_('Count visit'), default=0)
     salons_and_masters = models.ManyToManyField(
         'accounts.CustomUser',
         related_name='profile_salons_and_masters',
