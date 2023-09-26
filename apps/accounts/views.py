@@ -1,4 +1,5 @@
 import requests
+from datetime import datetime
 
 from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
@@ -63,10 +64,15 @@ class ProfileApiView(ListAPIView):
     summary='Retrieving all profiles for CRM integration.',
     description=(
         'Using optional parameter: **date**. You can filter the final result.\n'
-        '* date - filters by the date create account from input date to today.'
+        '* date - Filters the result by account creation date relative to the entered date.'
     )
 )
 class CRMIntegrationProfilesAPIView(ListAPIView):
-    queryset = Profile.objects.all()
     serializer_class = CRMIntegrationProfiles
     permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        if getattr(self, "swagger_fake_view", False):
+            return Profile.objects.none()
+        date = datetime.strptime(self.kwargs['date'], '%Y-%m-%d')
+        return Profile.objects.filter(user__date_joined__gte=date)
