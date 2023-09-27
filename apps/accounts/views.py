@@ -14,6 +14,7 @@ from rest_framework.response import Response
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer, CRMIntegrationProfiles
+from apps.tools.utils import CustomPagination
 
 domain = Site.objects.get_current().domain
 
@@ -57,7 +58,7 @@ class ProfileViewSet(ModelViewSet):
 
 
 @extend_schema(
-    summary='Retrieving all profiles of a specific role.',
+    summary='Retrieving all profiles of a specific role. (Default pagination size 10 objects)',
     description=(
         'Using optional parameters: **name**, **city**, **country**. You can filter the final result.\n'
         '* name - filters by the fields first_name and last_name.\n'
@@ -69,6 +70,7 @@ class ProfileApiView(ListAPIView):
     serializer_class = ProfileFilterSerializer
     permission_classes = [AllowAny]
     filterset_class = ProfileFilter
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
