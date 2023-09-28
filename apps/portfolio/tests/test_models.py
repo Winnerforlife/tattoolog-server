@@ -14,27 +14,9 @@ class ModelTestCase(TestCase):
             'last_name': 'Doe',
             'role': 'salon',
         }
-        self.user_data_2 = {
-            'email': 'test2@example.com',
-            'first_name': 'Piter',
-            'last_name': 'Parker',
-            'role': 'salon',
-        }
 
         self.user_1 = CustomUser.objects.create_user(**self.user_data_1)
-        self.user_2 = CustomUser.objects.create_user(**self.user_data_2)
-
-        self.file_content = b"Test file content"
-        self.avatar = SimpleUploadedFile("test_file.png", self.file_content, content_type="image/png")
-
-        self.profile_data = {
-            'user': self.user_1,
-            'avatar': self.avatar,
-            'about': 'Test about me',
-            'status': 'approved',
-        }
-        self.profile = Profile.objects.create(**self.profile_data)
-        self.profile.salons_and_masters.add(self.user_2)
+        self.profile = Profile.objects.get(user=self.user_1)
 
         self.work_type_data = {
             'name': 'Development',
@@ -64,7 +46,7 @@ class ModelTestCase(TestCase):
 
     def test_photo_creation(self):
         self.assertEqual(self.photo.post, self.post)
-        self.assertEqual(self.photo.photo, f'portfolio/photo/{self.post_photo.name}')
+        self.assertEqual(self.photo.photo.file.read(), self.file_content)
 
     def test_post_creation(self):
         self.assertEqual(self.post.profile, self.profile)
