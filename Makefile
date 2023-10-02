@@ -18,7 +18,7 @@ build:
 build_backend:
 	$(DOCKER_COMPOSE) up --build web
 
-# Создать минрации
+# Создать миграции
 mm:
 	$(PYTHON_MANAGE) makemigrations
 
@@ -30,7 +30,7 @@ m:
 createsuperuser:
 	$(PYTHON_MANAGE) createsuperuser
 
-# Отрыть backend shell
+# Открыть backend shell
 shell:
 	$(PYTHON_MANAGE) shell
 
@@ -38,15 +38,25 @@ shell:
 run:
 	$(PYTHON_MANAGE) runserver 0.0.0.0:8000
 
+# Принять все страны и города из модуля django-cities-light
+cities:
+	$(PYTHON_MANAGE) cities_light
+
+# Добавить зависимости в requirements.txt
+freeze:
+	pip freeze > requirements.txt
+
 # Помощь (список доступных команд)
 help:
 	@echo "Доступные команды:"
 	@echo "  up                 - Запустить контейнеры Docker"
 	@echo "  down               - Завершить контейнеры Docker"
 	@echo "  build              - Собрать контейнеры Docker"
-	@echo "  build_backend      - Перебилдить контейнеры Docker"
-	@echo "  mm                 - Создать минрации"
+	@echo "  build_backend      - Перебилдить контейнер backend"
+	@echo "  mm                 - Создать миграции"
 	@echo "  m                  - Применить миграции"
-	@echo "  createsuperuser    - Создать административного пользователя"
+	@echo "  createsuperuser    - Создать административного пользователя (superuser)"
 	@echo "  run                - Запустить Django-сервер"
-	@echo "  shell              - Отрыть backend shell"
+	@echo "  shell              - Открыть backend shell"
+	@echo "  cities             - Принять все страны и города из модуля django-cities-light"
+	@echo "  freeze             - Добавить зависимости в requirements.txt"

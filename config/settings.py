@@ -1,3 +1,4 @@
+import os.path
 from datetime import timedelta
 import environ
 
@@ -23,16 +24,21 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'apps.accounts',
+    'apps.portfolio',
+    'apps.tools',
 ]
 
 THIRD_PARTY_APPS = [
     'rest_framework',
-    "drf_yasg",
-    "djoser",
-    "corsheaders",
-    "rest_framework_simplejwt",
-    "rest_framework_simplejwt.token_blacklist",
+    'drf_yasg',
+    'djoser',
+    'corsheaders',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular',
+    'django_filters',
+    'cities_light',
+    'phonenumber_field',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -110,13 +116,18 @@ USE_TZ = True
 SITE_ID = 1
 if DEBUG:
     SITE_PROTOCOL = 'http'
+
+    STATIC_URL = '/config/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
+    MEDIA_URL = '/config/uploads/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
 else:
     SITE_PROTOCOL = 'https'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -132,6 +143,12 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -152,7 +169,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 SIMPLE_JWT = {
-    "AUTH_HEADER_TYPES": ("JWT", "Bearer"),
+    "AUTH_HEADER_TYPES": ("Bearer",),
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
@@ -167,8 +184,8 @@ DJOSER = {
     "SEND_CONFIRMATION_EMAIL": True,
     "SET_USERNAME_RETYPE": True,
     "SET_PASSWORD_RETYPE": True,
-    "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-    "PASSWORD_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
+    # "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "/auth/users/reset_password_confirm/{uid}/{token}",
     "ACTIVATION_URL": "auth/activation/{uid}/{token}/",
     "SEND_ACTIVATION_EMAIL": True,
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
@@ -198,3 +215,6 @@ EMAIL_USE_SSL = True
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
+
+# CITIES_LIGHT
+CITIES_LIGHT_INCLUDE_COUNTRIES = ['RU']
