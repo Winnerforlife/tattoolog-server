@@ -41,14 +41,16 @@ class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     permission_classes = [AllowAny]
 
-    @action(detail=True, methods=['GET'])
-    def retrieve_profile(self, request, pk=None):
-        profile = self.get_object()
+    # ToDo убрать ненужные ендпоинты
+    # http_method_names = ['get', 'patch']
+
+    def retrieve_profile(self, request, *args, **kwargs):
+        instance = self.get_object()
         current_user = request.user
-        if profile.user != current_user:
-            profile.count_visit += 1
-            profile.save()
-        serializer = self.get_serializer(profile)
+        if request.method == 'GET' and instance.user != current_user:
+            instance.count_visit += 1
+            instance.save()
+        serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):

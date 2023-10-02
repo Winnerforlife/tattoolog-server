@@ -54,6 +54,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "status",
             "country",
             "city",
+            "address",
             "birthday",
             "phone_number",
             "social_media_profile",
