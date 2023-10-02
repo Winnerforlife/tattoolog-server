@@ -1,98 +1,223 @@
+"""
+Для каждого ендпоинта отдельный класс: class {endpoint name}Test():
+
+Для каждого метода отдельная функция:
+    [GET] def test_list_{func name}(self):
+    [POST] def test_create_{func name}(self):
+           def test_create_{func name}_invalid_data(self):
+
+Внутри класса указать ожидаемые данные:
+    {
+      "photos": [
+        "string"
+      ],
+      "post": 0
+    }
+"""
+import tempfile
+
+from PIL import Image
+from io import BytesIO
+
+from datetime import datetime
+
 from django.urls import reverse
-from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils import timezone
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APIClient
 
 from apps.accounts.models import Profile, CustomUser
-from apps.portfolio.models import WorkType, Post
+from apps.portfolio.models import WorkType, Post, Photo
 
 
-class PostViewSetTests(APITestCase):
+class PhotoCreateViewTest(APITestCase):
+    """
+    {
+      "photos": [
+        "string"
+      ],
+      "post": 0
+    }
+    """
     def setUp(self):
-        self.user_data = {
+        self.client = APIClient()
+
+        self.user_data_1 = {
             'email': 'test@example.com',
-            'first_name': 'John',
+            'first_name': 'JohnPhoto',
             'last_name': 'Doe',
             'role': 'salon',
         }
-        self.user_data_2 = {
-            'email': 'piter@example.com',
-            'first_name': 'Piter',
-            'last_name': 'Parker',
-            'role': 'master',
+        self.user_1 = CustomUser.objects.create_user(**self.user_data_1)
+        self.profile_1 = Profile.objects.get(user=self.user_1)
+
+        self.work_type = WorkType.objects.create(name="Classic", description="Description for classic work type")
+
+        self.created_at = timezone.now()
+        self.post_data_1 = {
+            'profile': self.profile_1,
+            'description': 'Description for post',
+            'created_at': self.created_at,
+            'work_type': self.work_type
         }
-        self.user = CustomUser.objects.create_user(**self.user_data)
-        self.user_2 = CustomUser.objects.create_user(**self.user_data_2)
+        self.post_1 = Post.objects.create(**self.post_data_1)
 
-        self.file_content = b"Test file content"
-        self.avatar = SimpleUploadedFile("test_file.png", self.file_content, content_type="image/png")
+        self.url = reverse('post-photo')
 
-        self.profile_data = {
-            'user': self.user,
-            'avatar': self.avatar,
-            'about': 'Test about me',
-            'status': 'approved',
+    def get_test_mediafile_data(self):
+        image = Image.new('RGB', (100, 100))
+        image_io = BytesIO()
+        image.save(image_io, format='PNG')
+        image_io.seek(0)
+
+        temp_file = tempfile.NamedTemporaryFile(suffix='.png', delete=False)
+        temp_file.write(image_io.read())
+        temp_file.seek(0)
+
+        return temp_file
+
+    def test_create_photo(self):
+        self.assertEqual(Photo.objects.count(), 0)
+        with self.get_test_mediafile_data() as image_file1, \
+                self.get_test_mediafile_data() as image_file2:
+            photo_data = {
+                'post': self.post_1.id,
+                'photos': [image_file1, image_file2]
+            }
+            response = self.client.post(self.url, photo_data, format='multipart')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Photo.objects.count(), 2)
+        self.assertEqual(Photo.objects.filter(post=self.post_1).count(), 2)
+
+    def test_create_photo_invalid_data(self):
+        self.assertEqual(Photo.objects.count(), 0)
+        with self.get_test_mediafile_data() as image_file1:
+            photo_data = {
+                'post': self.post_1,
+                'photos': image_file1
+            }
+            response = self.client.post(self.url, photo_data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['post'][0].code, 'incorrect_type')
+        self.assertEqual(
+            str(response.data['post'][0]),
+            'Incorrect type. Expected pk value, received str.'
+        )
+
+
+class WorkTypeApiViewTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.work_type = WorkType.objects.create(name="Classic", description="Description for classic work type")
+
+    def test_list_work_types(self):
+        url = reverse('work_types')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = response.json()
+
+        self.assertEqual(response_data[0]['id'], self.work_type.id)
+        self.assertEqual(response_data[0]['name'], self.work_type.name)
+        self.assertEqual(response_data[0]['description'], self.work_type.description)
+
+
+class PostCreateApiViewTest(APITestCase):
+    """
+    URL: post/create/
+
+    {
+      "profile": 0,
+      "description": "string",
+      "work_type": 0,
+      "created_at": "2023-09-29T13:06:10.884Z"
+    }
+    """
+    def setUp(self):
+        self.client = APIClient()
+
+        self.user_data_1 = {
+            'email': 'test@example.com',
+            'first_name': 'JohnPost',
+            'last_name': 'Doe',
+            'role': 'salon',
         }
-        self.profile = Profile.objects.create(**self.profile_data)
-        self.profile.salons_and_masters.add(self.user_2)
+        self.user_1 = CustomUser.objects.create_user(**self.user_data_1)
+        self.profile_1 = Profile.objects.get(user=self.user_1)
 
-        self.work_type_data = {
-            'name': 'Test name',
-            'description': 'Test description'
-        }
-        self.work_type = WorkType.objects.create(**self.work_type_data)
+        self.work_type = WorkType.objects.create(name="Classic", description="Description for classic work type")
 
-        self.post_data = {
-            'profile': self.profile,
-            'description': 'Test Description',
-            'work_type': self.work_type,
-        }
-        self.post = Post.objects.create(**self.post_data)
+        self.created_at = timezone.now()
 
-        self.uploaded_file_1 = SimpleUploadedFile("test_image1.png", self.file_content)
-        self.uploaded_file_2 = SimpleUploadedFile("test_image2.jpg", self.file_content)
+        self.url = reverse('post')
 
     def test_create_post(self):
-        url = reverse('post-list')
-        data = {
-                'profile': self.profile.user_id,
-                "photo_post": [
-                    {"photo": self.uploaded_file_1},
-                    {"photo": self.uploaded_file_2}
-                ],
-                'description': 'Test Description',
-                'work_type': self.work_type.id,
-                "created_at": "2023-09-07T11:06:55.038Z",
-            }
-
-        response = self.client.post(url, data, format='multipart')
-        print(f'{response.data} - response.data')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Post.objects.count(), 2)
-
-    def test_retrieve_post(self):
-        url = reverse('post-detail', args=[self.post.id])
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_update_post(self):
-        url = reverse('post-detail', args=[self.post.id])
-        updated_data = {
-            'description': 'Updated Description',
+        post_data_1 = {
+            'profile': self.profile_1.user_id,
+            'description': 'Description for post_1',
+            'created_at': self.created_at,
+            'work_type': self.work_type.id
         }
-        response = self.client.patch(url, updated_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.post.refresh_from_db()
-        self.assertEqual(self.post.description, 'Updated Description')
 
-    def test_delete_post(self):
-        url = reverse('post-detail', args=[self.post.id])
-        response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Post.objects.count(), 0)
+        response = self.client.post(self.url, post_data_1, format='json')
 
-    def test_list_posts(self):
-        url = reverse('post-list')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_create_post_invalid_data(self):
+        post_data_2 = {
+            'profile': self.profile_1.user_id,
+            'description': 'Description for post_2',
+            'created_at': self.created_at,
+            'work_type': self.work_type.name
+        }
+
+        response = self.client.post(self.url, post_data_2, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('work_type', response.data)
+        self.assertEqual(response.data['work_type'][0].code, 'incorrect_type')
+        self.assertEqual(
+            str(response.data['work_type'][0]),
+            'Incorrect type. Expected pk value, received str.'
+        )
+
+
+class ProfilePostsApiViewTest(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        self.user_data_1 = {
+            'email': 'test@example.com',
+            'first_name': 'JohnProfile',
+            'last_name': 'DoePosts',
+            'role': 'salon',
+        }
+        self.user_1 = CustomUser.objects.create_user(**self.user_data_1)
+        self.profile_1 = Profile.objects.get(user=self.user_1)
+
+        self.work_type = WorkType.objects.create(name="Classic", description="Description for classic work type")
+
+        self.created_at = timezone.now()
+        self.post_data_1 = {
+            'profile': self.profile_1,
+            'description': 'Description for post_1',
+            'created_at': self.created_at,
+            'work_type': self.work_type
+        }
+        self.post_1 = Post.objects.create(**self.post_data_1)
+
+    def test_list_posts_for_user(self):
+        url = reverse('user-posts-list', args=[self.profile_1.user_id])
         response = self.client.get(url)
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_data = response.json()
+
+        self.assertEqual(response_data[0]['work_type']['id'], self.work_type.id)
+        self.assertEqual(response_data[0]['description'], self.post_1.description)
+        self.assertEqual(datetime.fromisoformat(response_data[0]['created_at']), self.post_1.created_at)
