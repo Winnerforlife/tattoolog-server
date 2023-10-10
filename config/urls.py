@@ -5,7 +5,7 @@ from django.urls import path, include
 
 from drf_spectacular.views import SpectacularAPIView
 
-from apps.accounts.views import activation_view
+from apps.accounts.views import activation_view, reset_password_redirect
 
 
 urlpatterns = [
@@ -19,6 +19,7 @@ urlpatterns = [
     path("auth/", include("djoser.urls")),
     path("auth/", include("djoser.urls.jwt")),
     path('auth/activation/<str:uid>/<str:token>/', activation_view, name='activation_view'),
+    path('auth/users/reset_password_confirm/<str:uid>/<str:token>/', reset_password_redirect, name='reset_password_redirect'),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
 

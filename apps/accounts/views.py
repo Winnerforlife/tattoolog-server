@@ -4,11 +4,11 @@ from datetime import datetime
 from django.contrib.sites.models import Site
 from django.http import HttpResponseRedirect
 from django.conf import settings
+from django.shortcuts import redirect
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.accounts.filters import ProfileFilter
@@ -28,6 +28,11 @@ def activation_view(request, uid, token):
         return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/error/')
+
+
+def reset_password_redirect(request, uid, token):
+    redirect_url = f"/set_new_password?uid={uid}&token={token}"
+    return redirect(redirect_url)
 
 
 @extend_schema(
