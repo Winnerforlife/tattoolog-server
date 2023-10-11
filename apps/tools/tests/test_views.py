@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 
 from apps.accounts.models import CustomUser, Profile
-from apps.tools.models import Blog, Rating
+from apps.tools.models import Blog
 from cities_light.models import Country, City
 
 
@@ -73,7 +73,7 @@ class BlogDetailViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class RatingDetailANDAverageRatingViewTest(APITestCase):
+class RatingCreateViewTest(APITestCase):
     def setUp(self):
         self.client = APIClient()
 
@@ -125,15 +125,3 @@ class RatingDetailANDAverageRatingViewTest(APITestCase):
 
         response = self.client.post(self.url, data_2, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_get_average_rating(self):
-        url_1 = reverse('average-rating', kwargs={'id': self.profile_1.user.id})
-        Rating.objects.create(profile=self.profile_1, mark=4, comment='Good')
-        Rating.objects.create(profile=self.profile_1, mark=5, comment='Norm')
-        response = self.client.get(url_1)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['average_rating'], 4.5)
-        url_2 = reverse('average-rating', kwargs={'id': self.profile_2.user.id})
-        response = self.client.get(url_2)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['average_rating'], 0)

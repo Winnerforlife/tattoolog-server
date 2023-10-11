@@ -14,7 +14,7 @@ from apps.accounts.models import CustomUser, Profile
 
 from cities_light.models import Country, City
 
-from apps.tools.models import SocialMediaType
+from apps.tools.models import SocialMediaType, Rating
 
 
 class ProfileViewSetTest(APITestCase):
@@ -54,6 +54,8 @@ class ProfileViewSetTest(APITestCase):
         self.profile.save()
 
         self.social_media_type = SocialMediaType.objects.create(name='Facebook')
+
+        self.profile_2 = Profile.objects.get(user=self.user2)
 
     def test_patch_profile(self):
         """
@@ -151,6 +153,23 @@ class ProfileViewSetTest(APITestCase):
         self.assertEqual(response.data['phone_number'], self.profile.phone_number)
         self.assertEqual(response.data['country'], self.profile.country.id)
         self.assertEqual(response.data['city'], self.profile.city.id)
+
+    def test_get_average_rating(self):
+        url_1 = reverse('profile-detail', args=[self.profile.user_id])
+
+        Rating.objects.create(profile=self.profile, mark=4, comment='Good')
+        Rating.objects.create(profile=self.profile, mark=5, comment='Norm')
+
+        response = self.client.get(url_1)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['average_rating'], 4.5)
+
+        url_2 = reverse('profile-detail', args=[self.profile_2.user_id])
+        response = self.client.get(url_2)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['average_rating'], 0)
 
     def test_list_profile(self):
         url = reverse('profile-list')
