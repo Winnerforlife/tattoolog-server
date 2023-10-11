@@ -60,7 +60,3 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('profile', 'mark', 'comment')
-
-
-class AverageRatingSerializer(serializers.Serializer):
-    average_rating = serializers.FloatField()

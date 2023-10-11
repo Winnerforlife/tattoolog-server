@@ -1,12 +1,13 @@
 from typing import Optional
 
+from django.db.models import Avg
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.accounts.models import Profile, CustomUser
 from apps.portfolio.serializers import PostSerializer
-from apps.tools.models import SocialMedia
+from apps.tools.models import SocialMedia, Rating
 from apps.tools.serializers import SocialMediaSerializer
 
 User = get_user_model()
@@ -43,6 +44,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     social_media_profile = SocialMediaSerializer(many=True)
+    average_rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -58,7 +60,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             "birthday",
             "phone_number",
             "social_media_profile",
-            "count_visit"
+            "count_visit",
+            "average_rating",
         )
 
     def update(self, instance, validated_data):
@@ -82,6 +85,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             )
             social_media_obj.link = link
             social_media_obj.save()
+
+    def get_average_rating(self, obj):
+        average_rating = Rating.objects.filter(profile=obj).aggregate(Avg('mark'))['mark__avg']
+        if average_rating is not None:
+            return round(average_rating, 1)
+        return 0
 
 
 class CRMIntegrationProfiles(serializers.ModelSerializer):
