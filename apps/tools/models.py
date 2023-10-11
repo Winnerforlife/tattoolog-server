@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -78,3 +79,16 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Rating(models.Model):
+    profile = models.ForeignKey(
+        'accounts.Profile',
+        on_delete=models.CASCADE,
+        related_name='rating_profile',
+    )
+    mark = models.PositiveSmallIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    comment = models.TextField(default='', blank=True)
+
+    def __str__(self):
+        return f"{self.profile.user.get_full_name()}_{self.mark}"
