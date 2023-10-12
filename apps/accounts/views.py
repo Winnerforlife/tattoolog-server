@@ -78,7 +78,7 @@ class ProfileApiView(ListAPIView):
         if getattr(self, "swagger_fake_view", False):
             return Profile.objects.none()
         role = self.kwargs['role']
-        return Profile.objects.filter(user__role=role) # TODO сделать .order_by() по рейтингу профиля от большего к меньшему
+        return Profile.objects.filter(user__role=role)  # TODO сделать .order_by() по рейтингу профиля от большего к меньшему
 
 
 @extend_schema(
