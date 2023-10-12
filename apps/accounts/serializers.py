@@ -29,10 +29,11 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     city = serializers.SerializerMethodField()
     country = serializers.SerializerMethodField()
+    average_rating = serializers.ReadOnlyField(source='get_average_rating')
 
     class Meta:
         model = Profile
-        fields = ("user", "avatar", "salons_and_masters", "about", "status", "country", "city")
+        fields = ("user", "avatar", "salons_and_masters", "about", "status", "country", "city", "average_rating")
 
     def get_city(self, obj) -> Optional[str]:
         return obj.city.name if obj.city else None
@@ -44,7 +45,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     social_media_profile = SocialMediaSerializer(many=True)
-    average_rating = serializers.SerializerMethodField()
+    average_rating = serializers.ReadOnlyField(source='get_average_rating')
 
     class Meta:
         model = Profile
@@ -85,12 +86,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             )
             social_media_obj.link = link
             social_media_obj.save()
-
-    def get_average_rating(self, obj):
-        average_rating = Rating.objects.filter(profile=obj).aggregate(Avg('mark'))['mark__avg']
-        if average_rating is not None:
-            return round(average_rating, 1)
-        return 0
 
 
 class CRMIntegrationProfiles(serializers.ModelSerializer):

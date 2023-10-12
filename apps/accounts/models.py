@@ -1,3 +1,4 @@
+from django.db.models import Avg
 from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
@@ -5,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.accounts.managers import CustomUserManager
+from apps.tools.models import Rating
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -66,6 +68,12 @@ class Profile(models.Model):
     address = models.CharField(default="", blank=True, max_length=255)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
     phone_number = PhoneNumberField(blank=True)
+
+    def get_average_rating(self):
+        average_rating = Rating.objects.filter(profile=self.user.id).aggregate(Avg('mark'))['mark__avg']
+        if average_rating is not None:
+            return round(average_rating, 1)
+        return 0
 
     def __str__(self):
         return self.user.get_full_name()
