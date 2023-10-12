@@ -2,13 +2,13 @@ import requests
 from datetime import datetime
 
 from django.contrib.sites.models import Site
+from django.db.models import Avg, Count, F
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.accounts.filters import ProfileFilter
@@ -78,7 +78,14 @@ class ProfileApiView(ListAPIView):
         if getattr(self, "swagger_fake_view", False):
             return Profile.objects.none()
         role = self.kwargs['role']
-        return Profile.objects.filter(user__role=role)  # TODO сделать .order_by() по рейтингу профиля от большего к меньшему
+
+        queryset = Profile.objects.filter(user__role=role).annotate(
+            avg_rating=Avg('rating_profile__mark'),
+            rating_count=Count('rating_profile')
+        )
+        queryset = queryset.order_by(F('avg_rating').desc(nulls_last=True), F('rating_count').desc(nulls_last=True))
+
+        return queryset
 
 
 @extend_schema(
