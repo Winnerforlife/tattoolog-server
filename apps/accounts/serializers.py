@@ -70,24 +70,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         self.update_user(instance.user, validated_data.pop('user', None))
         self.update_social_media_profiles(instance, validated_data.pop('social_media_profile', []))
-
-        country_data = validated_data.pop('country', None)
-        if country_data:
-            country_name = country_data.get('name')
-            if country_name:
-                country, created = Country.objects.get_or_create(name=country_name)
-                instance.country = country
-            else:
-                instance.country = None
-
-        city_data = validated_data.pop('city', None)
-        if city_data:
-            city_name = city_data.get('name')
-            if city_name:
-                city, created = City.objects.get_or_create(name=city_name)
-                instance.city = city
-            else:
-                instance.city = None
+        self.update_country(instance, validated_data.pop('country', None))
+        self.update_city(instance, validated_data.pop('city', None))
 
         instance = super().update(instance, validated_data)
         return instance
@@ -97,6 +81,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             for key, value in user_data.items():
                 setattr(user, key, value)
             user.save()
+
+    def update_country(self, instance, country_data):
+        country_name = country_data.get('name') if country_data else None
+        country, created = Country.objects.get_or_create(name=country_name)
+        instance.country = country
+
+    def update_city(self, instance, city_data):
+        city_name = city_data.get('name') if city_data else None
+        city, created = City.objects.get_or_create(name=city_name)
+        instance.city = city
 
     def update_social_media_profiles(self, instance, social_media_data):
         for social_media in social_media_data:
