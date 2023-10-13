@@ -1,5 +1,5 @@
 from typing import Optional
-
+from cities_light.models import Country, City
 from django.db.models import Avg
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
@@ -8,7 +8,7 @@ from rest_framework import serializers
 from apps.accounts.models import Profile, CustomUser
 from apps.portfolio.serializers import PostSerializer
 from apps.tools.models import SocialMedia, Rating
-from apps.tools.serializers import SocialMediaSerializer
+from apps.tools.serializers import SocialMediaSerializer, CityCustomSerializer, CountryCustomSerializer
 
 User = get_user_model()
 
@@ -46,6 +46,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     social_media_profile = SocialMediaSerializer(many=True)
     average_rating = serializers.ReadOnlyField(source='get_average_rating')
+    country = CountryCustomSerializer()
+    city = CityCustomSerializer()
 
     class Meta:
         model = Profile
@@ -68,6 +70,25 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         self.update_user(instance.user, validated_data.pop('user', None))
         self.update_social_media_profiles(instance, validated_data.pop('social_media_profile', []))
+
+        country_data = validated_data.pop('country', None)
+        if country_data:
+            country_name = country_data.get('name')
+            if country_name:
+                country, created = Country.objects.get_or_create(name=country_name)
+                instance.country = country
+            else:
+                instance.country = None
+
+        city_data = validated_data.pop('city', None)
+        if city_data:
+            city_name = city_data.get('name')
+            if city_name:
+                city, created = City.objects.get_or_create(name=city_name)
+                instance.city = city
+            else:
+                instance.city = None
+
         instance = super().update(instance, validated_data)
         return instance
 

@@ -11,11 +11,12 @@ class CountryCustomSerializer(serializers.ModelSerializer):
 
 
 class CityCustomSerializer(serializers.ModelSerializer):
-    country = CountryCustomSerializer()
+    # country = CountryCustomSerializer()
 
     class Meta:
         model = City
-        fields = ('id', 'name', 'country')
+        # fields = ('id', 'name', 'country')
+        fields = ('id', 'name')
 
 
 class SocialMediaTypeSerializer(serializers.ModelSerializer):
