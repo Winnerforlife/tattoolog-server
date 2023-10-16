@@ -72,8 +72,14 @@ class ProfileViewSetTest(APITestCase):
           ],
           "about": "string",
           "status": "pending",
-          "country": 0,
-          "city": 0,
+          "country": {
+            "id": 0,
+            "name": "string"
+          },
+          "city": {
+            "id": 0,
+            "name": "string"
+          },
           "address": "string",
           "birthday": "2023-10-02",
           "phone_number": "string",
@@ -100,8 +106,12 @@ class ProfileViewSetTest(APITestCase):
             ],
             "about": "New about me",
             "status": "approved",
-            "country": self.country.id,
-            "city": self.city.id,
+            "country": {
+                "name": self.country.name
+            },
+            "city": {
+                "name": self.city.name
+            },
             "address": "New address",
             "birthday": "2023-10-02",
             "phone_number": "+48731731731",
@@ -151,8 +161,8 @@ class ProfileViewSetTest(APITestCase):
         self.assertEqual(response.data['address'], self.profile.address)
         self.assertEqual(response.data['birthday'], str(self.profile.birthday))
         self.assertEqual(response.data['phone_number'], self.profile.phone_number)
-        self.assertEqual(response.data['country'], self.profile.country.id)
-        self.assertEqual(response.data['city'], self.profile.city.id)
+        self.assertEqual(response.data['country']['name'], self.profile.country.name)
+        self.assertEqual(response.data['city']['name'], self.profile.city.name)
 
     def test_get_average_rating(self):
         url_1 = reverse('profile-detail', args=[self.profile.user_id])
