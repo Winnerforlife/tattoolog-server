@@ -1,5 +1,6 @@
 from django.urls import path
-from apps.tools.views import CountryFilterView, CityFilterView, PartnersView, BlogDetailView, BlogListView
+from apps.tools.views import CountryFilterView, CityFilterView, PartnersView, BlogDetailView, BlogListView, \
+    RatingCreateView
 
 urlpatterns = [
     path('cities/', CityFilterView.as_view(), name='city-list'),
@@ -7,4 +8,5 @@ urlpatterns = [
     path('partners/', PartnersView.as_view(), name='partners'),
     path('blogs/', BlogListView.as_view(), name='blogs-list'),
     path('blog/<int:pk>/', BlogDetailView.as_view(), name='blog-detail'),
+    path('rating/', RatingCreateView.as_view(), name='rating'),
 ]

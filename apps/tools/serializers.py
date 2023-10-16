@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from cities_light.models import City, Country
 
-from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog
+from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog, Rating
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -54,3 +54,9 @@ class BlogSerializer(serializers.ModelSerializer):
             'opengraph_title',
             'opengraph_description'
         )
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ('profile', 'mark', 'comment')

@@ -2,13 +2,13 @@ import requests
 from datetime import datetime
 
 from django.contrib.sites.models import Site
+from django.db.models import Avg, Count, F
 from django.http import HttpResponseRedirect
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from apps.accounts.filters import ProfileFilter
@@ -16,10 +16,9 @@ from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer, CRMIntegrationProfiles
 from apps.tools.utils import CustomPagination
 
-domain = Site.objects.get_current().domain
-
 
 def activation_view(request, uid, token):
+    domain = Site.objects.get_current().domain
     activation_url = f"{settings.SITE_PROTOCOL}://{domain}/auth/users/activation/"
     data = {"uid": uid, "token": token}
     response = requests.post(activation_url, data=data)
@@ -78,7 +77,14 @@ class ProfileApiView(ListAPIView):
         if getattr(self, "swagger_fake_view", False):
             return Profile.objects.none()
         role = self.kwargs['role']
-        return Profile.objects.filter(user__role=role)
+
+        queryset = Profile.objects.filter(user__role=role).annotate(
+            avg_rating=Avg('rating_profile__mark'),
+            rating_count=Count('rating_profile')
+        )
+        queryset = queryset.order_by(F('avg_rating').desc(nulls_last=True), F('rating_count').desc(nulls_last=True))
+
+        return queryset
 
 
 @extend_schema(
