@@ -16,10 +16,9 @@ from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer, CRMIntegrationProfiles
 from apps.tools.utils import CustomPagination
 
-domain = Site.objects.get_current().domain
-
 
 def activation_view(request, uid, token):
+    domain = Site.objects.get_current().domain
     activation_url = f"{settings.SITE_PROTOCOL}://{domain}/auth/users/activation/"
     data = {"uid": uid, "token": token}
     response = requests.post(activation_url, data=data)
