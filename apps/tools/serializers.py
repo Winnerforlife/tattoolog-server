@@ -5,17 +5,20 @@ from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog, Rati
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+
     class Meta:
         model = Country
         fields = ('id', 'name')
 
 
 class CityCustomSerializer(serializers.ModelSerializer):
-    # country = CountryCustomSerializer()
+    id = serializers.IntegerField()
+    name = serializers.CharField()
 
     class Meta:
         model = City
-        # fields = ('id', 'name', 'country')
         fields = ('id', 'name')
 
 
