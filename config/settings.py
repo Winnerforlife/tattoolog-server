@@ -186,7 +186,7 @@ DJOSER = {
     "SET_PASSWORD_RETYPE": True,
     # "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
     "PASSWORD_RESET_CONFIRM_URL": "reset_password_confirm/{uid}/{token}",
-    "ACTIVATION_URL": "auth/activation/{uid}/{token}/",
+    "ACTIVATION_URL": "activation/{uid}/{token}/",
     "SEND_ACTIVATION_EMAIL": True,
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
