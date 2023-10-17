@@ -1,10 +1,6 @@
-import requests
 from datetime import datetime
 
-from django.contrib.sites.models import Site
 from django.db.models import Avg, Count, F
-from django.http import HttpResponseRedirect
-from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
@@ -15,18 +11,6 @@ from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile
 from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer, CRMIntegrationProfiles
 from apps.tools.utils import CustomPagination
-
-
-def activation_view(request, uid, token):
-    domain = Site.objects.get_current().domain
-    activation_url = f"{settings.SITE_PROTOCOL}://{domain}/auth/users/activation/"
-    data = {"uid": uid, "token": token}
-    response = requests.post(activation_url, data=data)
-
-    if response.status_code == 204:
-        return HttpResponseRedirect('/')
-    else:
-        return HttpResponseRedirect('/error/')
 
 
 @extend_schema(
