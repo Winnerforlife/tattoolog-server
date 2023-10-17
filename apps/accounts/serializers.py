@@ -83,14 +83,16 @@ class ProfileSerializer(serializers.ModelSerializer):
             user.save()
 
     def update_country(self, instance, country_data):
-        country_name = country_data.get('name') if country_data else None
-        country, created = Country.objects.get_or_create(name=country_name)
-        instance.country = country
+        if country_data:
+            country_name = country_data.get('name')
+            country, created = Country.objects.get_or_create(name=country_name)
+            instance.country = country
 
     def update_city(self, instance, city_data):
-        city_name = city_data.get('name') if city_data else None
-        city, created = City.objects.get_or_create(name=city_name)
-        instance.city = city
+        if city_data:
+            city_name = city_data.get('name')
+            city, created = City.objects.get_or_create(name=city_name)
+            instance.city = city
 
     def update_social_media_profiles(self, instance, social_media_data):
         for social_media in social_media_data:
