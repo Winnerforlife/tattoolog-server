@@ -85,13 +85,15 @@ class ProfileSerializer(serializers.ModelSerializer):
     def update_country(self, instance, country_data):
         if country_data:
             country_name = country_data.get('name')
-            country, created = Country.objects.get_or_create(name=country_name)
+            country_id = country_data.get('id')
+            country = Country.objects.get(name=country_name, id=country_id)
             instance.country = country
 
     def update_city(self, instance, city_data):
         if city_data:
             city_name = city_data.get('name')
-            city, created = City.objects.get_or_create(name=city_name)
+            city_id = city_data.get('id')
+            city = City.objects.get(name=city_name, id=city_id)
             instance.city = city
 
     def update_social_media_profiles(self, instance, social_media_data):
