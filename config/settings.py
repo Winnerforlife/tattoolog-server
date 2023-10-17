@@ -185,7 +185,7 @@ DJOSER = {
     "SET_USERNAME_RETYPE": True,
     "SET_PASSWORD_RETYPE": True,
     # "USERNAME_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
-    "PASSWORD_RESET_CONFIRM_URL": "/auth/users/reset_password_confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "reset_password_confirm/{uid}/{token}",
     "ACTIVATION_URL": "auth/activation/{uid}/{token}/",
     "SEND_ACTIVATION_EMAIL": True,
     "SOCIAL_AUTH_TOKEN_STRATEGY": "djoser.social.token.jwt.TokenStrategy",
@@ -217,4 +217,4 @@ EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
 
 # CITIES_LIGHT
-CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL', 'GB', 'DE', 'UA']
+# CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL', 'GB', 'DE', 'UA']
