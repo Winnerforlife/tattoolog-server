@@ -1,13 +1,16 @@
-version: "3.9"
+version: "3.3"
 
 services:
   web:
-    build: .
+    image: ghcr.io/vean-tattoo/tattoolog-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/code
     ports:
-      - "8000:8000"
+      - "8000:8200"
     depends_on:
       - db
 
