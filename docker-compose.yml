@@ -3,12 +3,12 @@ version: "3.3"
 services:
   web:
     image: ghcr.io/vean-tattoo/tattoolog-backend:latest
-    env_file:
-      - .env
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["/entrypoint.sh"]
+    command: python manage.py runserver 0.0.0.0:${WEB_PORT}
+    env_file:
+      - .env
     volumes:
       - .:/code
     ports:
