@@ -34,7 +34,6 @@
     PG_PASSWORD=postgres
     DB_HOST=db
     DB_PORT=5432
-    WEB_PORT=8000
 
     EMAIL_HOST_PASSWORD='zollknhrvwujnlcf'
     DEFAULT_FROM_EMAIL='example@gmail.com'
