@@ -12,7 +12,7 @@ services:
     volumes:
       - .:/code
     ports:
-      - "${WEB_PORT}:${WEB_PORT}"
+      - "8200:8200"
     depends_on:
       - db
 
@@ -21,11 +21,11 @@ services:
     env_file:
       - .env
     environment:
-      POSTGRES_DB: "${PG_DATABASE}"
-      POSTGRES_USER: "${PG_USER}"
-      POSTGRES_PASSWORD: "${PG_PASSWORD}"
+      POSTGRES_DB: "${PG_DATABASE:-db_log}"
+      POSTGRES_USER: "${PG_USER:-db_log_user}"
+      POSTGRES_PASSWORD: "${PG_PASSWORD:-passwordb123}"
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
