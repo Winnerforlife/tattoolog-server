@@ -114,15 +114,11 @@ USE_TZ = True
 
 SITE_ID = 1
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-if DEBUG:
-    SITE_PROTOCOL = 'http'
 
-    STATIC_URL = '/config/static/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
-    MEDIA_URL = '/config/uploads/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
-else:
-    SITE_PROTOCOL = 'https'
+STATIC_URL = '/config/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
+MEDIA_URL = '/config/uploads/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
