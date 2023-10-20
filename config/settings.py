@@ -11,7 +11,7 @@ BASE_DIR = root()
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = [host.strip("'\"") for host in env.str('ALLOWED_HOSTS').split(' ')]
-print(ALLOWED_HOSTS)
+
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -211,8 +211,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
+print(EMAIL_HOST_USER)
 EMAIL_HOST_PASSWORD = env.str('EMAIL_HOST_PASSWORD')
+print(EMAIL_HOST_PASSWORD)
 DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL')
-
+print(DEFAULT_FROM_EMAIL)
 # CITIES_LIGHT
 # CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL', 'GB', 'DE', 'UA']
