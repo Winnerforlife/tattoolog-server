@@ -11,7 +11,6 @@ BASE_DIR = root()
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = env.str('ALLOWED_HOSTS').split(' ')
-# ALLOWED_HOSTS = ["*"]
 
 DJANGO_APPS = [
     'django.contrib.admin',
