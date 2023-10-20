@@ -12,7 +12,6 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = [host.strip("'\"") for host in env.str('ALLOWED_HOSTS').split(' ')]
 
-
 DJANGO_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
