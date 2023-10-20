@@ -10,7 +10,7 @@ BASE_DIR = root()
 
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
-ALLOWED_HOSTS = env.str('ALLOWED_HOSTS').split(' ')
+ALLOWED_HOSTS = [host.strip("'\"") for host in env.str('ALLOWED_HOSTS').split(' ')]
 print(ALLOWED_HOSTS)
 
 DJANGO_APPS = [
