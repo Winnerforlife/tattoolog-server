@@ -10,6 +10,9 @@ ENV PYTHONUNBUFFERED 1
 # Set the working directory
 WORKDIR /code
 
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Copy and install requirements
 COPY requirements.txt /code/
 RUN pip install --no-cache-dir --upgrade pip
