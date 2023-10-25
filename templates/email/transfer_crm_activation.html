@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% block text_body %}
+    {% blocktrans %}
+        <p>You're receiving this email because you need to finish activation process on {{ domain }}.</p>
+    {% endblocktrans %}
+    <p>{% trans "Please go to the following page to activate account:" %}</p>
+    <p>{{ protocol }}://{{ domain }}/{{ url|safe }}</p>
+{% endblock text_body %}
+
+{% block html_body %}
+    <br>
+
+    <p>{% trans "Your login and temporary password to log in to your Tattoolog account:" %}</p>
+    {% blocktrans %}
+        <p>-----------------------------------</p>
+        <p>Login: {{ customer_email }}</p>
+        <p>Password: {{ customer_password }}</p>
+        <p>-----------------------------------</p>
+    {% endblocktrans %}
+    <p>{% trans "For security reasons, we recommend that you change it after activating your account" %}</p>
+
+    <br>
+
+    <p>{% trans "Thanks for using our site!" %}</p>
+    <p>{% blocktrans %}The {{ domain }} team{% endblocktrans %}</p>
+{% endblock html_body %}

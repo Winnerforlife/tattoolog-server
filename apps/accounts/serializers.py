@@ -137,3 +137,13 @@ class CRMIntegrationProfiles(serializers.ModelSerializer):
         data['post_profile'] = all_photos
 
         return data
+
+
+class TransferActivationEmailSerializer(serializers.Serializer):
+    """
+        Сериализатор для данных которые приходят из CRM
+    """
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    role = serializers.CharField(required=True)
