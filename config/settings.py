@@ -114,7 +114,6 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 public_key = env.str('DJANGO_S3_PUBLIC_KEY', None)
 private_key = env.str('DJANGO_S3_PRIVATE_KEY', None)
 bucket = env.str('DJANGO_S3_BUCKET_NAME', None)
-print(f"public_key - {public_key} | private_key {private_key} | bucket - {bucket}")
 
 if public_key and private_key and bucket:
     AWS_ACCESS_KEY_ID = public_key
