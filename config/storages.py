@@ -10,9 +10,9 @@ class _Storage(S3Boto3Storage):
     custom_domain = f'{bucket}.fra1.digitaloceanspaces.com'
 
 
-class StaticStorage(S3Boto3Storage):
+class StaticStorage(_Storage):
     location = 'static'
 
 
-class MediaStorage(S3Boto3Storage):
+class MediaStorage(_Storage):
     location = 'uploads'
