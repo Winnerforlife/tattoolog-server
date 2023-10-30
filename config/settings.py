@@ -128,10 +128,11 @@ if public_key and private_key and bucket:
     AWS_QUERYSTRING_AUTH = False
 
     STATIC_URL = 'https://%s/static/' % AWS_S3_CUSTOM_DOMAIN
-    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'config.storages.StaticStorage'
     STATIC_ROOT = 'static/'
+
     MEDIA_URL = 'https://%s/uploads/' % AWS_S3_CUSTOM_DOMAIN
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'config.storages.StaticStorage'
     MEDIA_ROOT = 'uploads/'
 else:
     STATIC_URL = '/config/static/'
