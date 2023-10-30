@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'cities_light',
     'phonenumber_field',
+    'storages',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -109,15 +110,33 @@ SITE_ID = 1
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-STATIC_URL = '/config/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
-MEDIA_URL = '/config/uploads/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
+# STATIC_URL
+public_key = env.str('DJANGO_S3_PUBLIC_KEY', None)
+private_key = env.str('DJANGO_S3_PRIVATE_KEY', None)
+bucket = env.str('DJANGO_S3_BUCKET_NAME', None)
+print(f"public_key - {public_key} | private_key {private_key} | bucket - {bucket}")
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+if public_key and private_key and bucket:
+    AWS_ACCESS_KEY_ID = public_key
+    AWS_SECRET_ACCESS_KEY = private_key
+    AWS_STORAGE_BUCKET_NAME = bucket
+    AWS_S3_ENDPOINT_URL = 'https://tattolog.fra1.digitaloceanspaces.com'
+    AWS_S3_CUSTOM_DOMAIN = 'tattolog.fra1.digitaloceanspaces.com'
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_QUERYSTRING_AUTH = False
 
-# STATIC_URL = '/static/'
+    STATIC_URL = 'https://%s/static/' % AWS_S3_CUSTOM_DOMAIN
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    MEDIA_URL = 'https://%s/media/' % AWS_S3_CUSTOM_DOMAIN
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+else:
+    STATIC_URL = '/config/static/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
+    MEDIA_URL = '/config/uploads/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
