@@ -138,7 +138,6 @@ else:
     MEDIA_URL = '/config/uploads/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'config/uploads/')
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
