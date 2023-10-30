@@ -129,11 +129,11 @@ if public_key and private_key and bucket:
 
     STATIC_URL = 'https://%s/static/' % AWS_S3_CUSTOM_DOMAIN
     STATICFILES_STORAGE = 'config.storages.StaticStorage'
-    STATIC_ROOT = 'static/'
+    # STATIC_ROOT = 'static/'
 
     MEDIA_URL = 'https://%s/uploads/' % AWS_S3_CUSTOM_DOMAIN
-    DEFAULT_FILE_STORAGE = 'config.storages.StaticStorage'
-    MEDIA_ROOT = 'uploads/'
+    DEFAULT_FILE_STORAGE = 'config.storages.MediaStorage'
+    # MEDIA_ROOT = 'uploads/'
 else:
     STATIC_URL = '/config/static/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'config/static/')
