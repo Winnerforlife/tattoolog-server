@@ -45,5 +45,5 @@ NUM_WORKERS=$(( $NUM_CORES ))
 if [ $DEBUG == "True" ]; then
     exec python3 manage.py runserver 0.0.0.0:${WEB_PORT}
 else
-    exec gunicorn config.wsgi:application --workers $NUM_WORKERS --bind 0.0.0.0:${WEB_PORT}
+    exec gunicorn config.wsgi:application --workers $NUM_WORKERS --bind 0.0.0.0:${WEB_PORT} --access-logfile=- --error-logfile=-
 fi
