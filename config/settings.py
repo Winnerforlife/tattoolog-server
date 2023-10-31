@@ -126,6 +126,7 @@ if public_key and private_key and bucket:
         'CacheControl': 'max-age=86400',
     }
     AWS_QUERYSTRING_AUTH = False
+    AWS_LOCATION = ''
 
     STATIC_URL = 'https://%s/static/' % AWS_S3_CUSTOM_DOMAIN
     STATICFILES_STORAGE = 'config.storages.StaticStorage'
