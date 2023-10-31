@@ -9,6 +9,7 @@ print(f"storages | bucket - {bucket}")
 class _Storage(S3Boto3Storage):
     bucket_name = bucket
     custom_domain = f'{bucket}.fra1.digitaloceanspaces.com'
+    location = ''
 
 
 class StaticStorage(_Storage):
