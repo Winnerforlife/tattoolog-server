@@ -119,7 +119,7 @@ if public_key and private_key and bucket:
     AWS_ACCESS_KEY_ID = public_key
     AWS_SECRET_ACCESS_KEY = private_key
     AWS_STORAGE_BUCKET_NAME = bucket
-    AWS_S3_ENDPOINT_URL = 'https://tattolog.fra1.digitaloceanspaces.com'
+    AWS_S3_ENDPOINT_URL = 'https://fra1.digitaloceanspaces.com'
     AWS_S3_CUSTOM_DOMAIN = 'tattolog.fra1.digitaloceanspaces.com'
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_OBJECT_PARAMETERS = {
