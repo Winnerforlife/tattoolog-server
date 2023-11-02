@@ -3,7 +3,6 @@ from django.dispatch import receiver
 
 from apps.accounts.models import Profile, CustomUser
 from apps.tools.models import SocialMediaType, SocialMedia
-from apps.tools.utils import convert_to_webp_signal
 
 
 @receiver(post_save, sender=CustomUser)
@@ -15,7 +14,3 @@ def create_profile(sender, instance, created, **kwargs):
         for media_type in existing_media_types:
             SocialMedia.objects.create(profile=profile, social_media_type=media_type)
 
-
-@receiver(post_save, sender=Profile)
-def profile_avatar_receiver(sender, instance, **kwargs):
-    convert_to_webp_signal('avatar')(sender, instance, **kwargs)
