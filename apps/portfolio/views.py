@@ -2,8 +2,9 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny
 
-from apps.portfolio.models import Post, Photo, WorkType
-from apps.portfolio.serializers import PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer
+from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation
+from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer,
+                                        AssociationPhotoProofSerializer, ModerationAssociationSerializer)
 
 
 @extend_schema(summary='Create post for specific user profile.')
@@ -37,3 +38,31 @@ class ProfilePostsApiView(ListAPIView):
             return Post.objects.none()
         user_id = self.kwargs['user_id']
         return Post.objects.filter(profile__user__id=user_id)
+
+
+@extend_schema(
+    summary='Create photo proofs for specific association.',
+    description=(
+        '* photos - (Array of photos to be attached for moderation).\n'
+        '* moderation - {moderation id} (The users moderation id. Returned when the moderation is created).'
+    )
+)
+class AssociationPhotoProofCreateView(CreateAPIView):
+    serializer_class = AssociationPhotoProofSerializer
+    queryset = AssociationPhotoProof.objects.all()
+    permission_classes = [AllowAny]
+
+
+@extend_schema(
+    summary='Create request for moderation association.',
+    description=(
+        '* profile - {profile id} (The user who applied).\n'
+        '* type - {type id} (Type of association label. "/tools/association-type/").\n'
+        '* status - {**pending**/approved/canceled} (Moderation status of the application. default=pending).\n'
+        '* comment - {string} (User comments to the moderation request).'
+    )
+)
+class ModerationAssociationCreateView(CreateAPIView):
+    serializer_class = ModerationAssociationSerializer
+    queryset = ModerationAssociation.objects.all()
+    permission_classes = [AllowAny]

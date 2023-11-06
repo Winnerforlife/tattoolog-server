@@ -4,9 +4,9 @@ from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter
-from apps.tools.models import Partners, Blog, Rating
+from apps.tools.models import Partners, Blog, Rating, AssociationType
 from apps.tools.serializers import CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, BlogSerializer, \
-    RatingSerializer
+    RatingSerializer, AssociationTypeSerializer
 from apps.tools.utils import CustomPagination
 
 
@@ -75,4 +75,11 @@ class BlogDetailView(generics.RetrieveAPIView):
 class RatingCreateView(generics.CreateAPIView):
     queryset = Rating.objects.all()
     serializer_class = RatingSerializer
+    permission_classes = [AllowAny]
+
+
+@extend_schema(summary='Retrieving work types.')
+class AssociationTypeApiView(generics.ListAPIView):
+    serializer_class = AssociationTypeSerializer
+    queryset = AssociationType.objects.all()
     permission_classes = [AllowAny]

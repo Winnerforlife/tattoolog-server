@@ -7,13 +7,10 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.accounts.managers import CustomUserManager
 from apps.tools.models import Rating
+from apps.tools.choices import STATUS_CHOICES, ROLE_CHOICES
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    ROLE_CHOICES = (
-        ('master', 'Mater'),
-        ('salon', 'Salon'),
-    )
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
@@ -42,11 +39,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Profile(models.Model):
-    STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('approved', 'Approved'),
-        ('canceled', 'Canceled'),
-    )
     user = models.OneToOneField(
         'accounts.CustomUser',
         on_delete=models.CASCADE,

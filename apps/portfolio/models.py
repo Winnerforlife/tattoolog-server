@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.tools.choices import STATUS_CHOICES
+
 
 class Post(models.Model):
     profile = models.ForeignKey(
@@ -38,3 +40,35 @@ class WorkType(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class ModerationAssociation(models.Model):
+    profile = models.ForeignKey(
+        'accounts.Profile',
+        on_delete=models.CASCADE,
+        related_name='moderation_profile_associate',
+    )
+    type = models.ForeignKey(
+        'tools.AssociationType',
+        on_delete=models.CASCADE,
+        related_name='association_type',
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+        help_text="Status of consideration of the association's label"
+    )
+    comment = models.TextField(_("Comment"), default='', blank=True)
+
+    def __str__(self):
+        return f"({self.profile.user.get_full_name()}) {self.type.name}"
+
+
+class AssociationPhotoProof(models.Model):
+    moderation = models.ForeignKey(
+        'portfolio.ModerationAssociation',
+        on_delete=models.CASCADE,
+        related_name='photo_proof_moderation',
+    )
+    photo = models.ImageField(_("Association photo proof"), upload_to="proof/photo")

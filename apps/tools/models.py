@@ -92,3 +92,11 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.profile.user.get_full_name()}_{self.mark}"
+
+
+class AssociationType(models.Model):
+    name = models.CharField(_('Association name'), max_length=128)
+    link = models.URLField(_('Association link'), null=True, blank=True)
+
+    def __str__(self):
+        return self.name
