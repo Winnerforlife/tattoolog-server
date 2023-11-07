@@ -92,3 +92,25 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.profile.user.get_full_name()}_{self.mark}"
+
+
+class Festival(models.Model):
+    image = models.ImageField(
+        _('Image'),
+        upload_to='festival_images/',
+        help_text="Image to be displayed in the festival post body, card photo and opengraph image"
+    )
+    title = models.CharField(_('Festival title'), max_length=255)
+    about = models.TextField(_('About festival'))
+    rules = models.TextField(_('Festival rules'), default="", blank=True)
+    slug = models.CharField(
+        _('Slug'),
+        max_length=32,
+        help_text="Page name in url. Example: https://domain.com/festival/[my_slug]/"
+    )
+    date_end = models.DateTimeField()
+    created_at = models.DateTimeField(default=timezone.now)
+    form_url = models.URLField(_("Link to registration form"))
+
+    def __str__(self):
+        return self.title
