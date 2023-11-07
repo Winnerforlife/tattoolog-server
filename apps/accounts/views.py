@@ -86,7 +86,7 @@ class ProfileApiView(ListAPIView):
     summary='Retrieving all profiles for CRM integration.',
     description=(
         'Using optional parameter: **date**. You can filter the final result.\n'
-        '* date - Filters the result by account creation date relative to the entered date.'
+        '* date - Filters profiles created later than the entered date. (%Y-%m-%d)'
     )
 )
 class CRMIntegrationProfilesAPIView(ListAPIView):
