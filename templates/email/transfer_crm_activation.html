@@ -1,27 +1,20 @@
 {% load i18n %}
 
-{% block text_body %}
-    {% blocktrans %}
-        <p>You're receiving this email because you need to finish activation process on {{ domain }}.</p>
-    {% endblocktrans %}
-    <p>{% trans "Please go to the following page to activate account:" %}</p>
-    <p>{{ protocol }}://{{ domain }}/{{ url|safe }}</p>
-{% endblock text_body %}
-
 {% block html_body %}
-    <br>
-
-    <p>{% trans "Your login and temporary password to log in to your Tattoolog account:" %}</p>
-    {% blocktrans %}
-        <p>-----------------------------------</p>
-        <p>Login: {{ customer_email }}</p>
-        <p>Password: {{ customer_password }}</p>
-        <p>-----------------------------------</p>
-    {% endblocktrans %}
-    <p>{% trans "For security reasons, we recommend that you change it after activating your account" %}</p>
-
-    <br>
-
-    <p>{% trans "Thanks for using our site!" %}</p>
-    <p>{% blocktrans %}The {{ domain }} team{% endblocktrans %}</p>
+<html>
+  <div style="background-color: #7B1FA2; padding: 20px; text-align: center; color: white; font-family: Arial, sans-serif;">
+    <h1 style="color: #FFE8E8;">You're receiving this email because you were automatically add in professional catalog by Vean - {{ domain }}</h1>
+    <h2 style="color: #FFE8E8; margin-bottom: 30px;">Below you can see your login and temporary password:</h2>
+    <div style="background-color: #4A235A; color: #FFE8E8; margin: auto; padding: 10px 20px; width: fit-content;">
+      <p>Login: <span style="font-weight: bold;">{{ customer_email }}</span></p>
+      <p>Password: <span style="font-weight: bold;">{{ customer_password }}</span></p>
+    </div>
+    <h2 style="color: #FFE8E8; margin-top: 30px;">Please go to the following page and choose a new password:</h2>
+    <div style="margin: auto; width: 100px;">
+      <a href="{{ protocol }}://{{ domain }}/{{ url|safe }}" style="background-color: white; color: #4A235A; padding: 10px 20px; text-decoration: none; text-transform: uppercase; display: block; border: 1px solid #4A235A;">
+        LOGIN
+      </a>
+    </div>
+  </div>
+</html>
 {% endblock html_body %}
