@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from apps.portfolio.models import Post, Photo, WorkType
+from apps.portfolio.models import Post, Photo, WorkType, ModerationAssociation, AssociationPhotoProof
+from apps.tools.models import AssociationType
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -48,3 +49,29 @@ class PostCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ("id", "profile", "description", "work_type", "created_at")
+
+
+class AssociationPhotoProofSerializer(serializers.ModelSerializer):
+    moderation = serializers.PrimaryKeyRelatedField(queryset=ModerationAssociation.objects.all(), write_only=True)
+    photos = serializers.ListField(child=serializers.ImageField(), write_only=True)
+
+    class Meta:
+        model = Photo
+        fields = ('photos', 'moderation')
+        extra_kwargs = {'photos': {'required': True}}
+
+    def create(self, validated_data):
+        photos_data = validated_data.pop("photos")
+        post_photos = [
+            AssociationPhotoProof(photo=photo, **validated_data)
+            for photo in photos_data
+        ]
+        return AssociationPhotoProof.objects.bulk_create(post_photos)
+
+
+class ModerationAssociationSerializer(serializers.ModelSerializer):
+    type = serializers.PrimaryKeyRelatedField(queryset=AssociationType.objects.all(), required=False)
+
+    class Meta:
+        model = ModerationAssociation
+        fields = ("id", "profile", "type", "status", "comment")
