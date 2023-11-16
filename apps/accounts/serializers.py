@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.accounts.models import Profile, CustomUser
-from apps.portfolio.serializers import PostSerializer
+from apps.portfolio.serializers import PostSerializer, ModerationAssociationSerializer
 from apps.tools.models import SocialMedia, Rating
 from apps.tools.serializers import SocialMediaSerializer, CityCustomSerializer, CountryCustomSerializer
 
@@ -48,6 +48,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     average_rating = serializers.ReadOnlyField(source='get_average_rating')
     country = CountryCustomSerializer()
     city = CityCustomSerializer()
+    moderation_profile_associate = ModerationAssociationSerializer(many=True, read_only=True)
 
     class Meta:
         model = Profile
@@ -65,6 +66,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "social_media_profile",
             "count_visit",
             "average_rating",
+            "moderation_profile_associate",
         )
 
     def update(self, instance, validated_data):

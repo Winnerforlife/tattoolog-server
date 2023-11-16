@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from cities_light.models import City, Country
 
-from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog, Rating
+
+from apps.tools.models import SocialMediaType, SocialMedia, Partners, Blog, Rating, AssociationType, Festival
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -64,3 +65,25 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = ('profile', 'mark', 'comment')
+
+
+class AssociationTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AssociationType
+        fields = ('id', 'name', 'link')
+
+
+class FestivalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Festival
+        fields = (
+            'id',
+            'image',
+            'title',
+            'about',
+            'rules',
+            'slug',
+            'date_end',
+            'created_at',
+            'form_url'
+        )

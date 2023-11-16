@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from apps.tools.models import SocialMedia, SocialMediaType, Partners, Blog, Rating
+from apps.tools.models import SocialMedia, SocialMediaType, Partners, Blog, Rating, AssociationType, Festival
 
 
 @admin.register(SocialMedia)
@@ -32,4 +32,14 @@ class BlogAdmin(admin.ModelAdmin):
 
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(AssociationType)
+class AssociationTypeAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Festival)
+class FestivalAdmin(admin.ModelAdmin):
     pass
