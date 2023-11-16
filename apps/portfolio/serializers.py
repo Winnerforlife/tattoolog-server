@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from apps.portfolio.models import Post, Photo, WorkType, ModerationAssociation, AssociationPhotoProof
 from apps.tools.models import AssociationType
+from apps.tools.serializers import AssociationTypeSerializer
 
 
 class PhotoSerializer(serializers.ModelSerializer):
@@ -70,7 +71,8 @@ class AssociationPhotoProofSerializer(serializers.ModelSerializer):
 
 
 class ModerationAssociationSerializer(serializers.ModelSerializer):
-    type = serializers.PrimaryKeyRelatedField(queryset=AssociationType.objects.all(), required=False)
+    # type = serializers.PrimaryKeyRelatedField(queryset=AssociationType.objects.all(), required=False)
+    type = AssociationTypeSerializer()
 
     class Meta:
         model = ModerationAssociation
