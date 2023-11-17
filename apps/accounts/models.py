@@ -11,7 +11,9 @@ from apps.tools.choices import STATUS_CHOICES, ROLE_CHOICES
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255, blank=True, null=True, unique=True)
+    username = models.CharField(max_length=255, unique=True)
+    phone_number = PhoneNumberField(blank=True, null=True, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
@@ -22,7 +24,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = "email"
+    USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["first_name", "last_name", "role"]
 
     def get_full_name(self):
@@ -35,7 +37,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return True
 
     def __str__(self):
-        return self.email
+        return str(self.id)
 
 
 class Profile(models.Model):

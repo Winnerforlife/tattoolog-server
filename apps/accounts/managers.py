@@ -2,12 +2,14 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, first_name, last_name, role, password=None, **extra_fields):
-        if not email:
-            raise ValueError("User must have an email")
-        email = self.normalize_email(email)
+    def create_user(self, username, first_name, last_name, role, password=None, **extra_fields):
+        if '@' in username:
+            extra_fields.setdefault('email', username)
+        else:
+            extra_fields.setdefault('phone_number', username)
+
         user = self.model(
-            email=email,
+            username=username,
             first_name=first_name,
             last_name=last_name,
             role=role,
@@ -17,8 +19,8 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
-        user = self.create_user(email, first_name, last_name, password=password, **extra_fields)
+    def create_superuser(self, username, first_name, last_name, role, password=None, **extra_fields):
+        user = self.create_user(username, first_name, last_name, role, password=password, **extra_fields)
         user.is_active = True
         user.is_staff = True
         user.is_admin = True
