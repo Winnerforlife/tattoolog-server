@@ -18,12 +18,12 @@ class ProfileAdmin(admin.ModelAdmin):
 @admin.register(CustomUser)
 class UserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('email', 'password', 'role')}),
+        (None, {'fields': ('username', 'email', 'phone_number', 'password', 'role')}),
         (_('Personal Info'), {'fields': ('first_name', 'last_name')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
-    list_display = ('email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_admin',)
+    list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_admin',)
     list_filter = ('is_active', 'is_staff', 'is_admin',)
     search_fields = ('email', 'first_name', 'last_name',)
     ordering = ('email',)

@@ -1,5 +1,6 @@
 from typing import Optional
 from cities_light.models import Country, City
+from phonenumber_field.serializerfields import PhoneNumberField
 from django.db.models import Avg
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
@@ -147,5 +148,14 @@ class TransferActivationEmailSerializer(serializers.Serializer):
     """
     first_name = serializers.CharField(required=True)
     last_name = serializers.CharField(required=True)
-    email = serializers.EmailField(required=True)
     role = serializers.CharField(required=True)
+    email = serializers.EmailField(required=False)
+    phone_number = PhoneNumberField(required=False)
+    about = serializers.CharField(required=False)
+    country = serializers.CharField(required=False)
+    city = serializers.CharField(required=False)
+    social_link = serializers.CharField(required=False)
+    avatar = serializers.ImageField(required=False)
+    work_photos = serializers.ListField(
+        child=serializers.ImageField(), required=False
+    )
