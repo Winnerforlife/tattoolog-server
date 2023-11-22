@@ -51,24 +51,6 @@ class PartnersView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 
-# @extend_schema(
-#     summary='Retrieving all blog objects. (Default pagination size 10 objects)',
-# )
-# class BlogListView(generics.ListAPIView):
-#     queryset = Blog.objects.all().order_by('-id')
-#     serializer_class = BlogSerializer
-#     permission_classes = [AllowAny]
-#     pagination_class = CustomPagination
-#
-#
-# @extend_schema(
-#     summary='Retrieving detail blog object.',
-# )
-# class BlogDetailView(generics.RetrieveAPIView):
-#     queryset = Blog.objects.all()
-#     serializer_class = BlogSerializer
-#     permission_classes = [AllowAny]
-
 @extend_schema(
     summary='Retrieving all blog objects. (Default pagination size 10 objects)',
 )

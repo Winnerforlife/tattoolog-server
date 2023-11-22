@@ -23,17 +23,6 @@ class PartnersAdmin(admin.ModelAdmin):
     pass
 
 
-# @admin.register(Blog)
-# class BlogAdmin(admin.ModelAdmin):
-#     fieldsets = (
-#         (_('Blog'), {'fields': ('image', 'title', 'body', 'created_at')}),
-#         (_('SEO Meta'), {'fields': (
-#             'slug', 'meta_title_tag', 'meta_description', 'meta_keywords', 'opengraph_title', 'opengraph_description'
-#             )
-#         }),
-#     )
-
-
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     pass

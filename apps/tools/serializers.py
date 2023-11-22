@@ -44,24 +44,6 @@ class PartnersSerializer(serializers.ModelSerializer):
         fields = ('name', 'logo', 'link')
 
 
-# class BlogSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Blog
-#         fields = (
-#             'id',
-#             'image',
-#             'title',
-#             'body',
-#             'created_at',
-#             'slug',
-#             'meta_title_tag',
-#             'meta_description',
-#             'meta_keywords',
-#             'opengraph_title',
-#             'opengraph_description'
-#         )
-
-
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
