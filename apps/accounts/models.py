@@ -11,9 +11,9 @@ from apps.tools.choices import STATUS_CHOICES, ROLE_CHOICES
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, blank=True, null=True, unique=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
     username = models.CharField(max_length=255, unique=True)
-    phone_number = PhoneNumberField(blank=True, null=True, unique=True)
+    phone_number = PhoneNumberField(blank=True, null=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)

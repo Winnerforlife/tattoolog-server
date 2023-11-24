@@ -7,7 +7,6 @@ from cities_light.models import Country, City
 from django.db.models import Avg, Count, F
 from django.db import transaction
 from django.core.mail import send_mail
-from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
@@ -29,7 +28,7 @@ from apps.portfolio.models import Post, Photo
 from apps.tools.models import SocialMedia
 from apps.tools.utils import CustomPagination
 
-logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
 @extend_schema(
@@ -108,6 +107,13 @@ class CRMIntegrationProfilesAPIView(ListAPIView):
         return Profile.objects.filter(user__date_joined__gte=date)
 
 
+def get_object_or_none(klass, *args, **kwargs):
+    try:
+        return klass.objects.get(*args, **kwargs)
+    except klass.DoesNotExist:
+        return None
+
+
 @extend_schema(
     summary='Creating a new user from CRM and sending an activation email or sms.',
 )
@@ -132,12 +138,16 @@ class TransferActivationEmailView(CreateAPIView):
             user_data = self.get_user_data(request)
             return CustomUser.objects.create_user(password=password, is_active=False, **user_data)
         except Exception as e:
-            logger.error(f"Error creating user: {e}")
+            logging.error(f"Error creating user: {e}")
             return Response({'error': 'Error creating user'}, status=status.HTTP_400_BAD_REQUEST)
 
     def get_user_data(self, request):
+        logging.info(f"request.data: {request.data}")
+        logging.info(f"request.FILES: {request.FILES}")
         email = request.data.get('email')
+        logging.info(f"email: {email}")
         phone_number = request.data.get('phone_number')
+        logging.info(f"phone_number: {phone_number}")
         return {
             'first_name': request.data.get('first_name'),
             'last_name': request.data.get('last_name'),
@@ -148,26 +158,30 @@ class TransferActivationEmailView(CreateAPIView):
         }
 
     def handle_profile_update(self, request, user_instance):
-        try:
-            profile_instance = Profile.objects.get(user=user_instance)
+        profile_instance = Profile.objects.get(user=user_instance)
+        logging.info(f"profile_instance: {profile_instance}")
 
-            profile_instance.status = 'approved'
-            profile_instance.about = request.data.get('about')
-            profile_instance.country = Country.objects.get(name=request.data.get('country')) if request.data.get('country') else None
-            profile_instance.city = City.objects.get(name=request.data.get('city')) if request.data.get('city') else None
-            profile_instance.avatar = request.FILES.get('avatar')
-            profile_instance.save()
+        profile_instance.status = 'approved'
+        profile_instance.about = request.data.get('about')
+        logging.info(f"profile_instance.about: {profile_instance.about}")
+        profile_instance.country = get_object_or_none(Country, name=request.data.get('country'))
+        logging.info(f"profile_instance.country: {profile_instance.country}")
+        profile_instance.city = get_object_or_none(City, name=request.data.get('city'))
+        logging.info(f"profile_instance.city: {profile_instance.city}")
+        profile_instance.avatar = request.FILES.get('avatar') if 'avatar' in request.FILES else None
+        logging.info(f"profile_instance.avatar: {profile_instance.avatar}")
+        profile_instance.save()
 
-            social_media_instance = SocialMedia.objects.get(profile=profile_instance, social_media_type__name="Instagram")
-            social_media_instance.link = request.data.get('social_link')
-            social_media_instance.save()
+        social_media_instance = SocialMedia.objects.get(profile=profile_instance, social_media_type__name="Instagram")
+        social_media_instance.link = request.data.get('social_link')
+        social_media_instance.save()
 
-            work_photos = request.FILES.getlist('work_photos')
+        work_photos = request.FILES.getlist('work_photos')
+        logging.info(f"work_photos: {work_photos}")
+        if work_photos:
             for photo_file in work_photos:
                 post_instance = Post.objects.create(profile=profile_instance)
                 Photo.objects.create(post=post_instance, photo=photo_file)
-        except ObjectDoesNotExist as e:
-            logger.warning(f"Object not found: {e}")
 
     def send_notification(self, user_instance, password):
         if user_instance.email:
@@ -196,8 +210,8 @@ class TransferActivationEmailView(CreateAPIView):
             email_html_message = render_to_string('email/transfer_crm_activation.html', email_context)
             send_mail(subject, '', '', [user_instance.email], html_message=email_html_message)
         except Exception as e:
-            logger.error(f"Error sending activation email: {e}")
+            logging.error(f"Error sending activation email: {e}")
 
     # TODO Реализация отправки сообщения в sms
     def send_activation_sms(self):
-        logger.info(f"Sent activation sms")
+        logging.info(f"Sent activation sms")
