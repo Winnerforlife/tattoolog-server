@@ -1,7 +1,11 @@
-from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
+import nested_admin
+import admin_thumbnails
 
-from apps.tools.models import SocialMedia, SocialMediaType, Partners, Blog, Rating, AssociationType, Festival
+from django.contrib import admin
+
+from apps.tools.choices import LANGUAGE_CHOICE
+from apps.tools.models import (SocialMedia, SocialMediaType, Partners, Rating, AssociationType, Festival, BlogPost,
+                               BlogBody, BlogBodyPhoto, BlogMeta, BlogPhotoCarousel)
 
 
 @admin.register(SocialMedia)
@@ -19,17 +23,6 @@ class PartnersAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(Blog)
-class BlogAdmin(admin.ModelAdmin):
-    fieldsets = (
-        (_('Blog'), {'fields': ('image', 'title', 'body', 'created_at')}),
-        (_('SEO Meta'), {'fields': (
-            'slug', 'meta_title_tag', 'meta_description', 'meta_keywords', 'opengraph_title', 'opengraph_description'
-            )
-        }),
-    )
-
-
 @admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     pass
@@ -43,3 +36,47 @@ class AssociationTypeAdmin(admin.ModelAdmin):
 @admin.register(Festival)
 class FestivalAdmin(admin.ModelAdmin):
     pass
+
+
+@admin_thumbnails.thumbnail('photo')
+class BlogBodyPhotoInline(nested_admin.NestedTabularInline):
+    model = BlogBodyPhoto
+    extra = 1
+
+
+class BlogBodyInline(nested_admin.NestedStackedInline):
+    model = BlogBody
+    extra = 0
+    inlines = [BlogBodyPhotoInline]
+
+
+@admin_thumbnails.thumbnail('opengraph_image')
+class BlogMetaInline(nested_admin.NestedStackedInline):
+    model = BlogMeta
+    extra = 0
+
+
+@admin_thumbnails.thumbnail('photo')
+class BlogPhotoCarouselInline(nested_admin.NestedTabularInline):
+    model = BlogPhotoCarousel
+    extra = 0
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(nested_admin.NestedModelAdmin):
+    inlines = [BlogBodyInline, BlogMetaInline, BlogPhotoCarouselInline]
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.save()
+            slug = obj.slug
+
+            for lang_code, lang_name in LANGUAGE_CHOICE:
+                if lang_code != obj.language:
+                    BlogPost.objects.create(
+                        slug=slug,
+                        country=obj.country,
+                        language=lang_code,
+                    )
+        else:
+            obj.save()
