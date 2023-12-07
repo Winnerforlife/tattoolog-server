@@ -40,9 +40,11 @@ THIRD_PARTY_APPS = [
     'cities_light',
     'phonenumber_field',
     'storages',
+    'nested_admin',
+    'admin_thumbnails',
 ]
 
-INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+INSTALLED_APPS = PROJECT_APPS + THIRD_PARTY_APPS + DJANGO_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

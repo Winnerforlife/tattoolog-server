@@ -1,7 +1,9 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE
 
 
 class SocialMedia(models.Model):
@@ -37,19 +39,55 @@ class Partners(models.Model):
         return self.name
 
 
-class Blog(models.Model):
+class BlogPost(models.Model):
     image = models.ImageField(
         _('Image'),
         upload_to='blog_images/',
-        help_text="Image to be displayed in the blog post body, card photo and opengraph image"
+        help_text="Image to be displayed in the blog post body and card photo"
     )
-    title = models.CharField(_('Blog title'), max_length=255)
-    body = models.TextField(_('Blog body'))
-    created_at = models.DateTimeField(default=timezone.now)
+    title = models.CharField(_('Blog post title'), max_length=255)
     slug = models.CharField(
         _('Slug'),
         max_length=32,
         help_text="Page name in url. Example: https://domain.com/blog/[my_slug]/"
+    )
+    created_at = models.DateTimeField(default=timezone.now)
+    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICE, default='en')
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICE, default='pl')
+
+    def __str__(self):
+        return f"{self.title} (country: {self.country}) (language: {self.language}) (slug: {self.slug})"
+
+
+class BlogBody(models.Model):
+    post = models.ForeignKey(
+        'tools.BlogPost',
+        on_delete=models.CASCADE,
+        related_name='blog_body',
+    )
+    title = models.CharField(_('Blog body title'), max_length=255)
+    body = models.TextField(_('Blog body'))
+
+
+class BlogBodyPhoto(models.Model):
+    post = models.ForeignKey(
+        'tools.BlogBody',
+        on_delete=models.CASCADE,
+        related_name='blog_body_photo',
+    )
+    photo = models.ImageField(_("Blog photo"), upload_to="blog_body/photo")
+    alt_name = models.CharField(
+        _('Photo ALT name'),
+        max_length=255,
+        help_text="ALT name for photo"
+    )
+
+
+class BlogMeta(models.Model):
+    post = models.OneToOneField(
+        'tools.BlogPost',
+        on_delete=models.CASCADE,
+        related_name='blog_meta',
     )
     meta_title_tag = models.CharField(
         _('Meta title tag'),
@@ -76,9 +114,20 @@ class Blog(models.Model):
         max_length=255,
         help_text="A one to two sentence description of your object"
     )
+    opengraph_image = models.ImageField(
+        _('Opengraph image'),
+        upload_to='opengraph_images/',
+        help_text="Image to be displayed on the opengraph image"
+    )
 
-    def __str__(self):
-        return self.title
+
+class BlogPhotoCarousel(models.Model):
+    post = models.ForeignKey(
+        'tools.BlogPost',
+        on_delete=models.CASCADE,
+        related_name='blog_photo_carousel',
+    )
+    photo = models.ImageField(_("Photo carousel"), upload_to="blog_carousel/photo")
 
 
 class Rating(models.Model):
