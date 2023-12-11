@@ -1,10 +1,11 @@
 from django.urls import path
 
 from apps.portfolio.views import PostCreateApiView, ProfilePostsApiView, PhotoCreateView, WorkTypeApiView, \
-    AssociationPhotoProofCreateView, ModerationAssociationCreateView
+    AssociationPhotoProofCreateView, ModerationAssociationCreateView, PostApiView
 
 urlpatterns = [
     path('posts/profile/<int:user_id>/', ProfilePostsApiView.as_view(), name='user-posts-list'),
+    path('post/<int:pk>/', PostApiView.as_view(), name='retrieve-post'),
     path('post-photo/create/', PhotoCreateView.as_view(), name='post-photo'),
     path('post/create/', PostCreateApiView.as_view(), name='post'),
     path('work_types/', WorkTypeApiView.as_view(), name='work_types'),
