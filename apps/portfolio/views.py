@@ -1,5 +1,5 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 
 from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation
@@ -38,6 +38,13 @@ class ProfilePostsApiView(ListAPIView):
             return Post.objects.none()
         user_id = self.kwargs['user_id']
         return Post.objects.filter(profile__user__id=user_id)
+
+
+@extend_schema(summary='Retrieving specific post by id.')
+class PostApiView(RetrieveAPIView):
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+    permission_classes = [AllowAny]
 
 
 @extend_schema(
