@@ -61,7 +61,10 @@ class Profile(models.Model):
     city = models.ForeignKey('cities_light.City', on_delete=models.SET_NULL, null=True, blank=True)
     address = models.CharField(default="", blank=True, max_length=255)
     birthday = models.DateField(_('Birthday'), null=True, blank=True)
-    phone_number = PhoneNumberField(blank=True)
+    # phone_number = PhoneNumberField(blank=True)
+    open_to_work = models.BooleanField(_("Open to work"), default=False)
+    mentor = models.BooleanField(_("Mentor"), default=False)
+    relocate = models.BooleanField(_("Ready to relocate"), default=False)
 
     def get_average_rating(self):
         average_rating = Rating.objects.filter(profile=self.user.id).aggregate(Avg('mark'))['mark__avg']
