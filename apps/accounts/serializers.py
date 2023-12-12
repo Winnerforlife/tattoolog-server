@@ -63,11 +63,13 @@ class ProfileSerializer(serializers.ModelSerializer):
             "city",
             "address",
             "birthday",
-            "phone_number",
             "social_media_profile",
             "count_visit",
             "average_rating",
             "moderation_profile_associate",
+            "open_to_work",
+            "mentor",
+            "relocate",
         )
 
     def update(self, instance, validated_data):
@@ -128,7 +130,7 @@ class CRMIntegrationProfiles(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('user', 'post_profile', 'about', 'social_media_profile', 'phone_number')
+        fields = ('user', 'post_profile', 'about', 'social_media_profile')
 
     def to_representation(self, instance):
         data = super().to_representation(instance)
