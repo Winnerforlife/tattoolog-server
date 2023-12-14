@@ -9,7 +9,7 @@ from apps.accounts.models import Profile, CustomUser
 class ProfileAdmin(admin.ModelAdmin):
     raw_id_fields = ('country', 'city')
     fieldsets = (
-        (_('Personal Info'), {'fields': ('avatar', 'status', 'birthday', 'about')}),
+        (_('Personal Info'), {'fields': ('avatar', 'status', 'birthday', 'about', 'open_to_work', 'mentor', 'relocate')}),
         (_('Dependencies'), {'fields': ('salons_and_masters',)}),
         (_('Location'), {'fields': ('country', 'city', 'address')}),
     )
