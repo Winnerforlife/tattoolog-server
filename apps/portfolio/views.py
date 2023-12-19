@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation
 from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer,
@@ -11,14 +11,14 @@ from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, Ph
 class PostCreateApiView(CreateAPIView):
     serializer_class = PostCreateSerializer
     queryset = Post.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema(summary='Create photos for specific post.')
 class PhotoCreateView(CreateAPIView):
     serializer_class = PhotoCreateSerializer
     queryset = Photo.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema(summary='Retrieving work types.')
@@ -57,7 +57,7 @@ class PostApiView(RetrieveAPIView):
 class AssociationPhotoProofCreateView(CreateAPIView):
     serializer_class = AssociationPhotoProofSerializer
     queryset = AssociationPhotoProof.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema(
@@ -72,4 +72,4 @@ class AssociationPhotoProofCreateView(CreateAPIView):
 class ModerationAssociationCreateView(CreateAPIView):
     serializer_class = ModerationAssociationSerializer
     queryset = ModerationAssociation.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
