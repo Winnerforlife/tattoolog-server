@@ -54,6 +54,11 @@ class BlogPost(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICE, default='en')
     country = models.CharField(max_length=10, choices=COUNTRY_CHOICE, default='pl')
+    is_active = models.BooleanField(default=True)
+
+    def delete(self, *args, **kwargs):
+        self.is_active = False
+        self.save()
 
     def __str__(self):
         return f"{self.title} (country: {self.country}) (language: {self.language}) (slug: {self.slug})"
