@@ -65,6 +65,7 @@ class BlogPhotoCarouselInline(nested_admin.NestedTabularInline):
 @admin.register(BlogPost)
 class BlogPostAdmin(nested_admin.NestedModelAdmin):
     inlines = [BlogBodyInline, BlogMetaInline, BlogPhotoCarouselInline]
+    readonly_fields = ('country', 'language',)
 
     def save_model(self, request, obj, form, change):
         if not change:

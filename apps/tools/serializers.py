@@ -117,5 +117,6 @@ class BlogPostSerializer(serializers.ModelSerializer):
             'slug',
             'blog_body',
             'blog_meta',
-            'blog_photo_carousel'
+            'blog_photo_carousel',
+            'is_active'
         )
