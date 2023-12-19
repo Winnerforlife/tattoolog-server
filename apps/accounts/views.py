@@ -16,7 +16,7 @@ from django.contrib.auth.tokens import default_token_generator
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import ListAPIView, CreateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 
@@ -31,6 +31,13 @@ from apps.tools.utils import CustomPagination
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 
+class IsAuthenticatedOrPatch(BasePermission):
+    def has_permission(self, request, view):
+        if request.method == 'PATCH':
+            return IsAuthenticated().has_permission(request, view)
+        return True
+
+
 @extend_schema(
     description=(
             'Field "user" represents the profile ID because the Profile model uses CustomUser model'
@@ -40,10 +47,8 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 class ProfileViewSet(ModelViewSet):
     serializer_class = ProfileSerializer
     queryset = Profile.objects.all()
-    permission_classes = [AllowAny]
-
-    # ToDo убрать ненужные ендпоинты
-    # http_method_names = ['get', 'patch']
+    permission_classes = [IsAuthenticatedOrPatch]
+    http_method_names = ['get', 'patch']
 
     def retrieve_profile(self, request, *args, **kwargs):
         instance = self.get_object()
