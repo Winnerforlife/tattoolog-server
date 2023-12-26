@@ -19,6 +19,7 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile, CustomUser
@@ -26,7 +27,7 @@ from apps.accounts.serializers import ProfileSerializer, ProfileFilterSerializer
     TransferActivationEmailSerializer
 from apps.portfolio.models import Post, Photo
 from apps.tools.models import SocialMedia
-from apps.tools.utils import CustomPagination
+from apps.tools.utils import CustomPagination, send_sms
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
@@ -192,7 +193,7 @@ class TransferActivationEmailView(CreateAPIView):
         if user_instance.email:
             self.send_activation_email(user_instance, password)
         else:
-            self.send_activation_sms()
+            self.send_activation_sms(user_instance.phone_number, password)
 
     def prepare_email_context(self, request, user_instance, password):
         current_site = get_current_site(request)
@@ -217,6 +218,11 @@ class TransferActivationEmailView(CreateAPIView):
         except Exception as e:
             logging.error(f"Error sending activation email: {e}")
 
-    # TODO Реализация отправки сообщения в sms
-    def send_activation_sms(self):
+    def send_activation_sms(self, phone_number, password):
         logging.info(f"Sent activation sms")
+        message = (f"Your login: {str(phone_number)}\n "
+                   f"Your password: {password}\n "
+                   f"Use this link to log into the catalog\n"
+                   f"https://tattoolog.pl/login\n"
+                   f"Best regards, TattooLog team")
+        send_sms(str(phone_number), message)

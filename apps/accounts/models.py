@@ -66,6 +66,10 @@ class Profile(models.Model):
     mentor = models.BooleanField(_("Mentor"), default=False)
     relocate = models.BooleanField(_("Ready to relocate"), default=False)
 
+    def delete(self, *args, **kwargs):
+        self.user.is_active = False
+        self.user.save()
+
     def get_average_rating(self):
         average_rating = Rating.objects.filter(profile=self.user.id).aggregate(Avg('mark'))['mark__avg']
         if average_rating is not None:
