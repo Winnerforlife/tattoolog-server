@@ -19,7 +19,7 @@ class CustomUserCreateSerializer(UserCreateSerializer):
         model = User
         fields = ("id", "email", "first_name", "last_name", "password", "role")
 
-
+#TODO: phone_number
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
