@@ -193,7 +193,7 @@ class TransferActivationEmailView(CreateAPIView):
         if user_instance.email:
             self.send_activation_email(user_instance, password)
         else:
-            self.send_activation_sms(user_instance.phone_number, password)
+            self.send_activation_sms(user_instance, password)
 
     def prepare_email_context(self, request, user_instance, password):
         current_site = get_current_site(request)
@@ -218,11 +218,15 @@ class TransferActivationEmailView(CreateAPIView):
         except Exception as e:
             logging.error(f"Error sending activation email: {e}")
 
-    def send_activation_sms(self, phone_number, password):
+    def send_activation_sms(self, user_instance, password):
         logging.info(f"Sent activation sms")
-        message = (f"Your login: {str(phone_number)}\n "
-                   f"Your password: {password}\n "
-                   f"Use this link to log into the catalog\n"
-                   f"https://tattoolog.pl/login\n"
+        uid = urlsafe_base64_encode(force_bytes(user_instance.id))
+        token = default_token_generator.make_token(user_instance)
+        message = (f"Hi, it`s Tattoolog team\n\n"
+                   f"Below you can see your login and temporary password:\n\n"
+                   f"login: {str(user_instance.phone_number)}\n"
+                   f"password: {password}\n"
+                   f"Use this link to log into the catalog\n\n"
+                   f"https://tattoolog.pl/activation/{uid}/{token}/\n\n"
                    f"Best regards, TattooLog team")
-        send_sms(str(phone_number), message)
+        send_sms(str(user_instance.phone_number), message)
