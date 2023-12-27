@@ -20,7 +20,7 @@ class UserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'email', 'phone_number', 'password', 'role')}),
         (_('Personal Info'), {'fields': ('first_name', 'last_name')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser')}),
+        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_admin', 'is_superuser', 'groups')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_admin',)
