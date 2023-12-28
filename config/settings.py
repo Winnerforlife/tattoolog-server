@@ -42,6 +42,7 @@ THIRD_PARTY_APPS = [
     'storages',
     'nested_admin',
     'admin_thumbnails',
+    'ckeditor',
 ]
 
 INSTALLED_APPS = PROJECT_APPS + THIRD_PARTY_APPS + DJANGO_APPS
