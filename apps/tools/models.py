@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 
+from ckeditor.fields import RichTextField
+
 from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE
 
 
@@ -71,7 +73,7 @@ class BlogBody(models.Model):
         related_name='blog_body',
     )
     title = models.CharField(_('Blog body title'), max_length=255)
-    body = models.TextField(_('Blog body'))
+    body = RichTextField(_('Blog body'))
 
 
 class BlogBodyPhoto(models.Model):
