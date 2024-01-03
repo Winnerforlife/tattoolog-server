@@ -45,7 +45,9 @@ class BlogPost(models.Model):
     image = models.ImageField(
         _('Image'),
         upload_to='blog_images/',
-        help_text="Image to be displayed in the blog post body and card photo"
+        help_text="Image to be displayed in the blog post body and card photo",
+        null=True,
+        blank=True
     )
     title = models.CharField(_('Blog post title'), max_length=255)
     slug = models.CharField(
@@ -82,11 +84,13 @@ class BlogBodyPhoto(models.Model):
         on_delete=models.CASCADE,
         related_name='blog_body_photo',
     )
-    photo = models.ImageField(_("Blog photo"), upload_to="blog_body/photo")
+    photo = models.ImageField(_("Blog photo"), upload_to="blog_body/photo", null=True, blank=True)
     alt_name = models.CharField(
         _('Photo ALT name'),
         max_length=255,
-        help_text="ALT name for photo"
+        help_text="ALT name for photo",
+        null=True,
+        blank=True
     )
 
 
@@ -99,32 +103,44 @@ class BlogMeta(models.Model):
     meta_title_tag = models.CharField(
         _('Meta title tag'),
         max_length=255,
-        help_text="Clickable page title displayed in search engine results as a headline"
+        help_text="Clickable page title displayed in search engine results as a headline",
+        null=True,
+        blank=True
     )
     meta_description = models.CharField(
         _('Meta description'),
         max_length=255,
-        help_text="Description displayed beneath the headline in search engine results"
+        help_text="Description displayed beneath the headline in search engine results",
+        null=True,
+        blank=True
     )
     meta_keywords = models.CharField(
         _('Meta keywords'),
         max_length=255,
-        help_text="List of keywords that correspond to the content of a website page"
+        help_text="List of keywords that correspond to the content of a website page",
+        null=True,
+        blank=True
     )
     opengraph_title = models.CharField(
         _('Opengraph title'),
         max_length=255,
-        help_text="The title of your object as it should appear within the graph"
+        help_text="The title of your object as it should appear within the graph",
+        null=True,
+        blank=True
     )
     opengraph_description = models.CharField(
         _('Opengraph description'),
         max_length=255,
-        help_text="A one to two sentence description of your object"
+        help_text="A one to two sentence description of your object",
+        null=True,
+        blank=True
     )
     opengraph_image = models.ImageField(
         _('Opengraph image'),
         upload_to='opengraph_images/',
-        help_text="Image to be displayed on the opengraph image"
+        help_text="Image to be displayed on the opengraph image",
+        null=True,
+        blank=True
     )
 
 
@@ -134,7 +150,7 @@ class BlogPhotoCarousel(models.Model):
         on_delete=models.CASCADE,
         related_name='blog_photo_carousel',
     )
-    photo = models.ImageField(_("Photo carousel"), upload_to="blog_carousel/photo")
+    photo = models.ImageField(_("Photo carousel"), upload_to="blog_carousel/photo", null=True, blank=True)
 
 
 class Rating(models.Model):
@@ -162,7 +178,9 @@ class Festival(models.Model):
     image = models.ImageField(
         _('Image'),
         upload_to='festival_images/',
-        help_text="Image to be displayed in the festival post body, card photo and opengraph image"
+        help_text="Image to be displayed in the festival post body, card photo and opengraph image",
+        null=True,
+        blank=True
     )
     title = models.CharField(_('Festival title'), max_length=255)
     about = models.TextField(_('About festival'))
