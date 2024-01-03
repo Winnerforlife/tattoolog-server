@@ -19,7 +19,6 @@ from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from apps.accounts.filters import ProfileFilter
 from apps.accounts.models import Profile, CustomUser
@@ -86,7 +85,7 @@ class ProfileApiView(ListAPIView):
             return Profile.objects.none()
         role = self.kwargs['role']
 
-        queryset = Profile.objects.filter(user__role=role).annotate(
+        queryset = Profile.objects.filter(user__role=role, status='approved').annotate(
             avg_rating=Avg('rating_profile__mark'),
             rating_count=Count('rating_profile')
         )
@@ -222,11 +221,9 @@ class TransferActivationEmailView(CreateAPIView):
         logging.info(f"Sent activation sms")
         uid = urlsafe_base64_encode(force_bytes(user_instance.id))
         token = default_token_generator.make_token(user_instance)
-        message = (f"Hi, it`s TattooLog team!\n\n"
-                   f"Below you can see your login and temporary password:\n\n"
+        message = (f"Hi!💜\n\n"
                    f"login: {str(user_instance.phone_number)}\n"
                    f"password: {password}\n\n"
-                   f"Use this link to log into the catalog.\n\n"
-                   f"https://tattoolog.pl/activation/{uid}/{token}/\n\n"
-                   f"Best regard, TattooLog team! 💜")
+                   f"Link to log into the catalog:\n\n"
+                   f"https://tattoolog.pl/activation/{uid}/{token}/")
         send_sms(str(user_instance.phone_number), message)
