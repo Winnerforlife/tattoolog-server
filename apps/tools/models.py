@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 from ckeditor.fields import RichTextField
 
-from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE
+from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE, PARTNER_TYPE_CHOICE
 
 
 class SocialMedia(models.Model):
@@ -36,6 +36,7 @@ class Partners(models.Model):
     name = models.CharField(_('Partner name'), max_length=128)
     logo = models.ImageField(_('Logo'), upload_to="partners/logo")
     link = models.URLField(_('Partner link'), null=True, blank=True)
+    type = models.CharField(max_length=10, choices=PARTNER_TYPE_CHOICE, default='project')
 
     def __str__(self):
         return self.name
