@@ -6,6 +6,8 @@ from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, 
 from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer,
                                         AssociationPhotoProofSerializer, ModerationAssociationSerializer)
 
+from apps.tools.utils import CustomPagination
+
 
 @extend_schema(summary='Create post for specific user profile.')
 class PostCreateApiView(CreateAPIView):
@@ -32,6 +34,7 @@ class WorkTypeApiView(ListAPIView):
 class ProfilePostsApiView(ListAPIView):
     serializer_class = PostSerializer
     permission_classes = [AllowAny]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         if getattr(self, "swagger_fake_view", False):
