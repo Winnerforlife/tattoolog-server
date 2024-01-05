@@ -3,8 +3,8 @@ import string
 import logging
 from datetime import datetime
 from cities_light.models import Country, City
-
-from django.db.models import Avg, Count, F
+from django.db.models.functions import Coalesce
+from django.db.models import Avg, Count, FloatField
 from django.db import transaction
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -68,10 +68,15 @@ class ProfileViewSet(ModelViewSet):
 @extend_schema(
     summary='Retrieving all profiles of a specific role. (Default pagination size 10 objects)',
     description=(
-            'Using optional parameters: **name**, **city**, **country**. You can filter the final result.\n'
-            '* name - filters by the fields first_name and last_name.\n'
+            'Using optional parameters you can filter the final result:\n'
             '* city - filters by the field city.\n'
-            '* country - filters by the field country.'
+            '* country - filters by the field country.\n'
+            '* mentor - filters by the field mentor.\n'
+            '* name - filters by the fields first_name and last_name.\n'
+            '* open_to_work - filters by the field open_to_work.\n'
+            '* rating_order - filters by rating [params: acs, desc].\n'
+            '* relocate - filters by the field relocate.\n'
+            '* work_type - filters by the field work_type by name object.'
     )
 )
 class ProfileApiView(ListAPIView):
@@ -86,10 +91,9 @@ class ProfileApiView(ListAPIView):
         role = self.kwargs['role']
 
         queryset = Profile.objects.filter(user__role=role, status='approved').annotate(
-            avg_rating=Avg('rating_profile__mark'),
+            avg_rating=Coalesce(Avg('rating_profile__mark'), 0, output_field=FloatField()),
             rating_count=Count('rating_profile')
         )
-        queryset = queryset.order_by(F('avg_rating').desc(nulls_last=True), F('rating_count').desc(nulls_last=True))
 
         return queryset
 

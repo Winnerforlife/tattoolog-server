@@ -34,7 +34,20 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ("user", "avatar", "salons_and_masters", "about", "status", "country", "city", "average_rating", "open_to_work", 'mentor', 'relocate', 'moderation_profile_associate')
+        fields = (
+            "user",
+            "avatar",
+            "salons_and_masters",
+            "about",
+            "status",
+            "country",
+            "city",
+            "average_rating",
+            "open_to_work",
+            'mentor',
+            'relocate',
+            'moderation_profile_associate'
+        )
 
     def get_city(self, obj) -> Optional[str]:
         return obj.city.name if obj.city else None
