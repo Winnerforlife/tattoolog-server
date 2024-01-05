@@ -40,7 +40,7 @@ class ProfilePostsApiView(ListAPIView):
         if getattr(self, "swagger_fake_view", False):
             return Post.objects.none()
         user_id = self.kwargs['user_id']
-        return Post.objects.filter(profile__user__id=user_id)
+        return Post.objects.filter(profile__user__id=user_id).order_by('-created_at')
 
 
 @extend_schema(summary='Retrieving specific post by id.')
