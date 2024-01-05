@@ -41,7 +41,7 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 class PartnersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partners
-        fields = ('name', 'logo', 'link')
+        fields = ('name', 'logo', 'link', 'type')
 
 
 class RatingSerializer(serializers.ModelSerializer):

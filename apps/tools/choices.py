@@ -24,3 +24,8 @@ COUNTRY_CHOICE = Choices(
     ('pl', 'Poland'),
     ('ua', 'Ukraine'),
 )
+
+PARTNER_TYPE_CHOICE = Choices(
+    ('store', 'Store'),
+    ('project', 'Project'),
+)

@@ -7,10 +7,25 @@ class ProfileFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(method='filter_name')
     country = django_filters.CharFilter(field_name='country__name', lookup_expr='icontains')
     city = django_filters.CharFilter(field_name='city__name', lookup_expr='icontains')
+    open_to_work = django_filters.BooleanFilter(field_name='open_to_work')
+    mentor = django_filters.BooleanFilter(field_name='mentor')
+    relocate = django_filters.BooleanFilter(field_name='relocate')
+    work_type = django_filters.CharFilter(method='filter_work_type')
+    rating_order = django_filters.CharFilter(method='filter_rating_order', label='Rating Order')
 
     class Meta:
         model = Profile
-        fields = ['name', 'country', 'city']
+        fields = ['name', 'country', 'city', 'open_to_work', 'mentor', 'relocate', 'work_type']
 
     def filter_name(self, queryset, name, value):
         return queryset.filter(Q(user__first_name__icontains=value) | Q(user__last_name__icontains=value))
+
+    def filter_work_type(self, queryset, name, value):
+        return queryset.filter(post_profile__work_type__name=value).distinct()
+
+    def filter_rating_order(self, queryset, name, value):
+        if value == 'asc':
+            return queryset.order_by('avg_rating', 'rating_count')
+        elif value == 'desc':
+            return queryset.order_by('-avg_rating', '-rating_count')
+        return queryset
