@@ -63,12 +63,13 @@ class FestivalSerializer(serializers.ModelSerializer):
             'id',
             'image',
             'title',
-            'about',
-            'rules',
+            'about_en', 'about_uk', 'about_pl', 'about_de',
+            'rules_en', 'rules_uk', 'rules_pl', 'rules_de',
             'slug',
             'date_end',
             'created_at',
-            'form_url'
+            'form_url',
+            'country'
         )
 
 

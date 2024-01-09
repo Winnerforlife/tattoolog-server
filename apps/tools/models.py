@@ -194,6 +194,7 @@ class Festival(models.Model):
     date_end = models.DateTimeField()
     created_at = models.DateTimeField(default=timezone.now)
     form_url = models.URLField(_("Link to registration form"))
+    country = models.CharField(max_length=10, choices=COUNTRY_CHOICE, default='pl')
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.country}"

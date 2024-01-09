@@ -1,6 +1,8 @@
 import os.path
 from datetime import timedelta
 import environ
+from django.utils.translation import gettext_lazy as _
+
 
 root = environ.Path(__file__) - 2
 env = environ.Env()
@@ -29,6 +31,7 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
+    'modeltranslation',
     'rest_framework',
     'drf_yasg',
     'djoser',
@@ -45,7 +48,7 @@ THIRD_PARTY_APPS = [
     'ckeditor',
 ]
 
-INSTALLED_APPS = PROJECT_APPS + THIRD_PARTY_APPS + DJANGO_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + PROJECT_APPS + DJANGO_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -231,3 +234,12 @@ DEFAULT_FROM_EMAIL = env.str('DEFAULT_FROM_EMAIL').strip("'\"")
 
 # CITIES_LIGHT
 # CITIES_LIGHT_INCLUDE_COUNTRIES = ['PL', 'GB', 'DE', 'UA']
+
+
+# LANGUAGE_CODE = "en"
+LANGUAGES = (
+    ("en", _("English")),
+    ("uk", _("Ukrainian")),
+    ("pl", _("Polish")),
+    ("de", _("German")),
+)
