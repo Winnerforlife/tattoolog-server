@@ -1,6 +1,7 @@
 import nested_admin
 import admin_thumbnails
 
+from modeltranslation.admin import TranslationAdmin, TabbedTranslationAdmin
 from django.contrib import admin
 
 from apps.tools.choices import LANGUAGE_CHOICE
@@ -34,7 +35,7 @@ class AssociationTypeAdmin(admin.ModelAdmin):
 
 
 @admin.register(Festival)
-class FestivalAdmin(admin.ModelAdmin):
+class FestivalAdmin(TabbedTranslationAdmin):
     pass
 
 
