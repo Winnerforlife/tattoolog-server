@@ -183,17 +183,17 @@ class Festival(models.Model):
         null=True,
         blank=True
     )
-    title = models.CharField(_('Festival title'), max_length=255)
-    about = models.TextField(_('About festival'))
+    title = models.CharField(_('Festival title'), max_length=255, blank=True, null=True)
+    about = models.TextField(_('About festival'), blank=True, null=True)
     rules = models.TextField(_('Festival rules'), default="", blank=True)
     slug = models.CharField(
         _('Slug'),
         max_length=32,
         help_text="Page name in url. Example: https://domain.com/festival/[my_slug]/"
     )
-    date_end = models.DateTimeField()
+    date_end = models.DateTimeField(blank=True, null=True)
     created_at = models.DateTimeField(default=timezone.now)
-    form_url = models.URLField(_("Link to registration form"))
+    form_url = models.URLField(_("Link to registration form"), blank=True, null=True)
     country = models.CharField(max_length=10, choices=COUNTRY_CHOICE, default='pl')
 
     def __str__(self):
