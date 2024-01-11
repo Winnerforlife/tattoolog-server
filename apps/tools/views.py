@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 from cities_light.models import City, Country
@@ -118,3 +119,7 @@ class FestivalDetailView(generics.RetrieveAPIView):
     queryset = Festival.objects.all()
     serializer_class = FestivalSerializer
     permission_classes = [AllowAny]
+
+    def get_object(self):
+        slug = self.kwargs.get('slug')
+        return get_object_or_404(Festival, slug=slug)
