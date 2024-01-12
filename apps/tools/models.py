@@ -184,8 +184,8 @@ class Festival(models.Model):
         blank=True
     )
     title = models.CharField(_('Festival title'), max_length=255, blank=True, null=True)
-    about = models.TextField(_('About festival'), blank=True, null=True)
-    rules = models.TextField(_('Festival rules'), default="", blank=True)
+    about = RichTextField(_('About festival'), blank=True, null=True)
+    rules = RichTextField(_('Festival rules'), default="", blank=True)
     slug = models.CharField(
         _('Slug'),
         max_length=32,
