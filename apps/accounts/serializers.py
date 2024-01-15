@@ -30,7 +30,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     city = serializers.SerializerMethodField()
     country = serializers.SerializerMethodField()
-    average_rating = serializers.ReadOnlyField(source='get_average_rating')
+    rating = serializers.ReadOnlyField(source='get_average_rating')
 
     class Meta:
         model = Profile
@@ -42,7 +42,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
             "status",
             "country",
             "city",
-            "average_rating",
+            "rating",
             "open_to_work",
             'mentor',
             'relocate',
@@ -59,7 +59,7 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     user = CustomUserSerializer()
     social_media_profile = SocialMediaSerializer(many=True)
-    average_rating = serializers.ReadOnlyField(source='get_average_rating')
+    rating = serializers.ReadOnlyField(source='get_average_rating')
     country = CountryCustomSerializer()
     city = CityCustomSerializer()
     moderation_profile_associate = ModerationAssociationSerializer(many=True, read_only=True)
@@ -78,7 +78,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "birthday",
             "social_media_profile",
             "count_visit",
-            "average_rating",
+            "rating",
             "moderation_profile_associate",
             "open_to_work",
             "mentor",
