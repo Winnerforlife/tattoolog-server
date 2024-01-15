@@ -71,10 +71,17 @@ class Profile(models.Model):
         self.user.save()
 
     def get_average_rating(self):
-        average_rating = Rating.objects.filter(profile=self.user.id).aggregate(Avg('mark'))['mark__avg']
+        ratings = Rating.objects.filter(profile=self.user.id)
+        average_rating = ratings.aggregate(Avg('mark'))['mark__avg']
+        count_ratings = ratings.count()
+
         if average_rating is not None:
-            return round(average_rating, 1)
-        return 0
+            average_rating = round(average_rating, 1)
+
+        return {
+            'average_rating': average_rating or 0,
+            'count_ratings': count_ratings
+        }
 
     def __str__(self):
         return self.user.get_full_name()
