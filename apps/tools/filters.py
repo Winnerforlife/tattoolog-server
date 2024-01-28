@@ -1,7 +1,7 @@
 import django_filters
+from django.utils.translation import gettext_lazy as _
 from cities_light.models import City, Country
-
-from apps.tools.models import BlogPost
+from apps.tools.models import BlogPost, BlogCategory
 
 
 class CountryLightFilter(django_filters.FilterSet):
@@ -22,9 +22,23 @@ class CityLightFilter(django_filters.FilterSet):
 
 
 class BlogPostsFilter(django_filters.FilterSet):
-    language = django_filters.CharFilter(field_name='language', lookup_expr='iexact')
-    country = django_filters.CharFilter(field_name='country', lookup_expr='iexact')
+    language = django_filters.CharFilter(
+        field_name='language',
+        lookup_expr='iexact',
+        help_text="Filter posts by language."
+    )
+    country = django_filters.CharFilter(
+        field_name='country',
+        lookup_expr='iexact',
+        help_text="Filter posts by country."
+    )
+    category = django_filters.ModelMultipleChoiceFilter(
+        field_name='category__name',
+        to_field_name='name',
+        queryset=BlogCategory.objects.all(),
+        help_text="Filter posts by blog category."
+    )
 
     class Meta:
         model = BlogPost
-        fields = ['language', 'country']
+        fields = ['language', 'country', 'category']

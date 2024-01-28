@@ -6,9 +6,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import NotFound
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter
-from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost
+from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory
 from apps.tools.serializers import (CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, RatingSerializer,
-                                    AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer)
+                                    AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer,
+                                    BlogCategorySerializer)
 from apps.tools.utils import CustomPagination
 
 
@@ -123,3 +124,10 @@ class FestivalDetailView(generics.RetrieveAPIView):
     def get_object(self):
         slug = self.kwargs.get('slug')
         return get_object_or_404(Festival, slug=slug)
+
+
+class BlogCategoryListView(generics.ListAPIView):
+    queryset = BlogCategory.objects.all()
+    serializer_class = BlogCategorySerializer
+    permission_classes = [AllowAny]
+    pagination_class = CustomPagination

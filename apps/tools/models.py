@@ -50,6 +50,12 @@ class BlogPost(models.Model):
         null=True,
         blank=True
     )
+    category = models.ManyToManyField(
+        'tools.BlogCategory',
+        related_name='blog_category',
+        verbose_name=_("Blog category"),
+        blank=True
+    )
     title = models.CharField(_('Blog post title'), max_length=255)
     slug = models.CharField(
         _('Slug'),
@@ -152,6 +158,13 @@ class BlogPhotoCarousel(models.Model):
         related_name='blog_photo_carousel',
     )
     photo = models.ImageField(_("Photo carousel"), upload_to="blog_carousel/photo", null=True, blank=True)
+
+
+class BlogCategory(models.Model):
+    name = models.CharField(_('Blog category name'), max_length=32)
+
+    def __str__(self):
+        return self.name
 
 
 class Rating(models.Model):
