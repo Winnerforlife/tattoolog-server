@@ -1,7 +1,7 @@
 import django_filters
 from django.utils.translation import gettext_lazy as _
 from cities_light.models import City, Country
-from apps.tools.models import BlogPost, BlogCategory
+from apps.tools.models import BlogPost, BlogCategory, Festival
 
 
 class CountryLightFilter(django_filters.FilterSet):
@@ -36,9 +36,21 @@ class BlogPostsFilter(django_filters.FilterSet):
         field_name='category__name',
         to_field_name='name',
         queryset=BlogCategory.objects.all(),
-        help_text="Filter posts by blog category."
+        help_text="Filter posts by blog category name."
     )
 
     class Meta:
         model = BlogPost
         fields = ['language', 'country', 'category']
+
+
+class FestivalFilter(django_filters.FilterSet):
+    category = django_filters.CharFilter(
+        field_name='category__name',
+        lookup_expr='iexact',
+        help_text="Filter festival objects by festival category name."
+    )
+
+    class Meta:
+        model = Festival
+        fields = ['category']
