@@ -63,6 +63,8 @@ class FestivalCategorySerializer(serializers.ModelSerializer):
 
 
 class FestivalSerializer(serializers.ModelSerializer):
+    category = FestivalCategorySerializer(read_only=True)
+
     class Meta:
         model = Festival
         fields = (
