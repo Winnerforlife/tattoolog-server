@@ -3,7 +3,7 @@ from cities_light.models import City, Country
 
 
 from apps.tools.models import (SocialMediaType, SocialMedia, Partners, Rating, AssociationType, Festival, BlogBodyPhoto,
-                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel)
+                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel, BlogCategory)
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -100,16 +100,23 @@ class BlogPhotoCarouselSerializer(serializers.ModelSerializer):
         fields = ('photo',)
 
 
+class BlogCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = ('id', 'name')
+
+
 class BlogPostSerializer(serializers.ModelSerializer):
     blog_body = BlogBodySerializer(many=True, read_only=True)
     blog_meta = BlogMetaSerializer(read_only=True)
     blog_photo_carousel = BlogPhotoCarouselSerializer(many=True, read_only=True)
+    category = BlogCategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = BlogPost
         fields = (
             'id',
-            # 'slug',
+            'category',
             'language',
             'country',
             'image',
