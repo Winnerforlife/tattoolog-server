@@ -92,8 +92,9 @@ class ProfileApiView(ListAPIView):
 
         queryset = Profile.objects.filter(user__role=role, status='approved').annotate(
             avg_rating=Coalesce(Avg('rating_profile__mark'), 0, output_field=FloatField()),
-            rating_count=Count('rating_profile')
-        )
+            rating_count=Count('rating_profile'),
+            post_count=Count('post_profile')
+        ).order_by('-post_count')
 
         return queryset
 
