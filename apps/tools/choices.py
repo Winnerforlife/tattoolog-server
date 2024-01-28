@@ -29,3 +29,8 @@ PARTNER_TYPE_CHOICE = Choices(
     ('store', 'Store'),
     ('project', 'Project'),
 )
+
+WORK_TYPE_CATEGORY_CHOICE = Choices(
+    ('tattoo', 'Tattoo'),
+    ('piercing', 'Piercing'),
+)

@@ -2,6 +2,7 @@ from drf_spectacular.utils import extend_schema
 from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
+from apps.portfolio.filters import WorkTypeFilter
 from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation
 from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer,
                                         AssociationPhotoProofSerializer, ModerationAssociationSerializer)
@@ -27,6 +28,7 @@ class PhotoCreateView(CreateAPIView):
 class WorkTypeApiView(ListAPIView):
     serializer_class = WorkTypeSerializer
     queryset = WorkType.objects.all()
+    filterset_class = WorkTypeFilter
     permission_classes = [AllowAny]
 
 
