@@ -14,7 +14,7 @@ class PhotoSerializer(serializers.ModelSerializer):
 class WorkTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkType
-        fields = ('id', 'name', 'description')
+        fields = ('id', 'name', 'description', 'category')
 
 
 class PostSerializer(serializers.ModelSerializer):

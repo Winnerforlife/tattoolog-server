@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from apps.tools.choices import STATUS_CHOICES
+from apps.tools.choices import STATUS_CHOICES, WORK_TYPE_CATEGORY_CHOICE
 
 
 class Post(models.Model):
@@ -37,6 +37,11 @@ class Photo(models.Model):
 class WorkType(models.Model):
     name = models.CharField(_("Work type name"), default='', max_length=32)
     description = models.TextField(_("Description"), default='', blank=True)
+    category = models.CharField(
+        _("Work type category"),
+        choices=WORK_TYPE_CATEGORY_CHOICE,
+        default=WORK_TYPE_CATEGORY_CHOICE.tattoo
+    )
 
     def __str__(self):
         return self.name

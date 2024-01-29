@@ -3,7 +3,7 @@ from cities_light.models import City, Country
 
 
 from apps.tools.models import (SocialMediaType, SocialMedia, Partners, Rating, AssociationType, Festival, BlogBodyPhoto,
-                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel)
+                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel, BlogCategory, FestivalCategory)
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -56,13 +56,22 @@ class AssociationTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'link')
 
 
+class FestivalCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FestivalCategory
+        fields = ('id', 'name')
+
+
 class FestivalSerializer(serializers.ModelSerializer):
+    category = FestivalCategorySerializer(read_only=True)
+
     class Meta:
         model = Festival
         fields = (
             'id',
             'image',
             'title',
+            'category',
             'about_en', 'about_uk', 'about_pl', 'about_de',
             'rules_en', 'rules_uk', 'rules_pl', 'rules_de',
             'slug',
@@ -100,16 +109,23 @@ class BlogPhotoCarouselSerializer(serializers.ModelSerializer):
         fields = ('photo',)
 
 
+class BlogCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogCategory
+        fields = ('id', 'name')
+
+
 class BlogPostSerializer(serializers.ModelSerializer):
     blog_body = BlogBodySerializer(many=True, read_only=True)
     blog_meta = BlogMetaSerializer(read_only=True)
     blog_photo_carousel = BlogPhotoCarouselSerializer(many=True, read_only=True)
+    category = BlogCategorySerializer(many=True, read_only=True)
 
     class Meta:
         model = BlogPost
         fields = (
             'id',
-            # 'slug',
+            'category',
             'language',
             'country',
             'image',

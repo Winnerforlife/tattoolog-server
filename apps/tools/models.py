@@ -41,6 +41,10 @@ class Partners(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = _("Partner")
+        verbose_name_plural = _("Partners")
+
 
 class BlogPost(models.Model):
     image = models.ImageField(
@@ -48,6 +52,12 @@ class BlogPost(models.Model):
         upload_to='blog_images/',
         help_text="Image to be displayed in the blog post body and card photo",
         null=True,
+        blank=True
+    )
+    category = models.ManyToManyField(
+        'tools.BlogCategory',
+        related_name='blog_category',
+        verbose_name=_("Blog category"),
         blank=True
     )
     title = models.CharField(_('Blog post title'), max_length=255)
@@ -154,6 +164,17 @@ class BlogPhotoCarousel(models.Model):
     photo = models.ImageField(_("Photo carousel"), upload_to="blog_carousel/photo", null=True, blank=True)
 
 
+class BlogCategory(models.Model):
+    name = models.CharField(_('Blog category name'), max_length=32)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Blog category")
+        verbose_name_plural = _("Blog categories")
+
+
 class Rating(models.Model):
     profile = models.ForeignKey(
         'accounts.Profile',
@@ -184,6 +205,13 @@ class Festival(models.Model):
         blank=True
     )
     title = models.CharField(_('Festival title'), max_length=255, blank=True, null=True)
+    category = models.ForeignKey(
+        'tools.FestivalCategory',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='festival_category',
+    )
     about = RichTextField(_('About festival'), blank=True, null=True)
     rules = RichTextField(_('Festival rules'), default="", blank=True)
     slug = models.CharField(
@@ -198,3 +226,14 @@ class Festival(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.country}"
+
+
+class FestivalCategory(models.Model):
+    name = models.CharField(_('Festival category name'), max_length=32)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Festival category")
+        verbose_name_plural = _("Festival categories")

@@ -5,10 +5,11 @@ from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import NotFound
 
-from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter
-from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost
+from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter, FestivalFilter
+from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory, FestivalCategory
 from apps.tools.serializers import (CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, RatingSerializer,
-                                    AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer)
+                                    AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer,
+                                    BlogCategorySerializer, FestivalCategorySerializer)
 from apps.tools.utils import CustomPagination
 
 
@@ -109,6 +110,7 @@ class FestivalListView(generics.ListAPIView):
     queryset = Festival.objects.all().order_by('-id')
     serializer_class = FestivalSerializer
     permission_classes = [AllowAny]
+    filterset_class = FestivalFilter
     pagination_class = CustomPagination
 
 
@@ -123,3 +125,23 @@ class FestivalDetailView(generics.RetrieveAPIView):
     def get_object(self):
         slug = self.kwargs.get('slug')
         return get_object_or_404(Festival, slug=slug)
+
+
+@extend_schema(
+    summary='Retrieving all blog categories objects.',
+)
+class BlogCategoryListView(generics.ListAPIView):
+    queryset = BlogCategory.objects.all()
+    serializer_class = BlogCategorySerializer
+    permission_classes = [AllowAny]
+    # pagination_class = CustomPagination
+
+
+@extend_schema(
+    summary='Retrieving all festival categories objects.',
+)
+class FestivalCategoryListView(generics.ListAPIView):
+    queryset = FestivalCategory.objects.all()
+    serializer_class = FestivalCategorySerializer
+    permission_classes = [AllowAny]
+    # pagination_class = CustomPagination
