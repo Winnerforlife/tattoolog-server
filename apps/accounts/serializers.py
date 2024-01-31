@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from apps.accounts.models import Profile, CustomUser
-from apps.portfolio.serializers import PostSerializer, ModerationAssociationSerializer, ProfileFromProjectSerializer, \
-    ProfileAssociationSerializer
+from apps.portfolio.models import ModerationAssociation, ModerationFromProject
+from apps.portfolio.serializers import PostSerializer, ProfileFromProjectSerializer, ProfileAssociationSerializer
 from apps.tools.models import SocialMedia, Rating
 from apps.tools.serializers import SocialMediaSerializer, CityCustomSerializer, CountryCustomSerializer
 
@@ -32,6 +32,8 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
     city = serializers.SerializerMethodField()
     country = serializers.SerializerMethodField()
     rating = serializers.ReadOnlyField(source='get_average_rating')
+    moderation_profile_associate = serializers.SerializerMethodField()
+    moderation_profile_from_project = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
@@ -47,7 +49,8 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
             "open_to_work",
             'mentor',
             'relocate',
-            'moderation_profile_associate'
+            'moderation_profile_associate',
+            'moderation_profile_from_project',
         )
 
     def get_city(self, obj) -> Optional[str]:
@@ -55,6 +58,14 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
 
     def get_country(self, obj) -> Optional[str]:
         return obj.country.name if obj.country else None
+
+    def get_moderation_profile_associate(self, obj):
+        moderation_items = ModerationAssociation.objects.filter(profile=obj, status='approved')
+        return ProfileAssociationSerializer(moderation_items, many=True).data
+
+    def get_moderation_profile_from_project(self, obj):
+        moderation_items = ModerationFromProject.objects.filter(profile=obj, status='approved')
+        return ProfileFromProjectSerializer(moderation_items, many=True).data
 
 
 class ProfileSerializer(serializers.ModelSerializer):

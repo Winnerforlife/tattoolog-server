@@ -12,6 +12,8 @@ class ProfileFilter(django_filters.FilterSet):
     relocate = django_filters.BooleanFilter(field_name='relocate')
     work_type = django_filters.CharFilter(method='filter_work_type')
     rating_order = django_filters.CharFilter(method='filter_rating_order', label='Rating Order')
+    moderation_associate_type = django_filters.CharFilter(method='filter_moderation_associate_type')
+    moderation_project_type = django_filters.CharFilter(method='filter_moderation_project_type')
 
     class Meta:
         model = Profile
@@ -29,3 +31,13 @@ class ProfileFilter(django_filters.FilterSet):
         elif value == 'desc':
             return queryset.order_by('-avg_rating', '-rating_count')
         return queryset
+
+    def filter_moderation_associate_type(self, queryset, name, value):
+        return queryset.filter(
+            moderation_profile_associate__type__name=value
+        ).distinct()
+
+    def filter_moderation_project_type(self, queryset, name, value):
+        return queryset.filter(
+            moderation_profile_from_project__type__name=value
+        ).distinct()
