@@ -1,7 +1,7 @@
 from django.urls import path
 from apps.tools.views import (CountryFilterView, CityFilterView, PartnersView, RatingCreateView, AssociationTypeApiView,
                               FestivalListView, FestivalDetailView, BlogPostListView, BlogPostDetailView,
-                              BlogCategoryListView, FestivalCategoryListView)
+                              BlogCategoryListView, FestivalCategoryListView, ProjectApiView)
 
 urlpatterns = [
     path('cities/', CityFilterView.as_view(), name='city-list'),
@@ -9,6 +9,7 @@ urlpatterns = [
     path('partners/', PartnersView.as_view(), name='partners'),
     path('rating/', RatingCreateView.as_view(), name='rating'),
     path('association-type/', AssociationTypeApiView.as_view(), name='association-type'),
+    path('projects-type/', ProjectApiView.as_view(), name='projects-type'),
     path('festivals/', FestivalListView.as_view(), name='festivals-list'),
     path('festival/<str:slug>/', FestivalDetailView.as_view(), name='festival-detail'),
     path('festivals/category/', FestivalCategoryListView.as_view(), name='festival-category-list'),

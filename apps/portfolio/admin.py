@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from apps.portfolio.models import Post, Photo, WorkType, ModerationAssociation, AssociationPhotoProof
+from apps.portfolio.models import Post, Photo, WorkType, ModerationAssociation, AssociationPhotoProof, \
+    ModerationFromProject
 
 
 @admin.register(Post)
@@ -27,3 +28,8 @@ class AssociationPhotoProofInline(admin.TabularInline):
 @admin.register(ModerationAssociation)
 class ModerationAssociationAdmin(admin.ModelAdmin):
     inlines = [AssociationPhotoProofInline]
+
+
+@admin.register(ModerationFromProject)
+class ModerationFromProjectAdmin(admin.ModelAdmin):
+    pass
