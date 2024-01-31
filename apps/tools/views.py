@@ -6,10 +6,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import NotFound
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter, FestivalFilter
-from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory, FestivalCategory
+from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory, FestivalCategory, \
+    Project
 from apps.tools.serializers import (CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, RatingSerializer,
                                     AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer,
-                                    BlogCategorySerializer, FestivalCategorySerializer)
+                                    BlogCategorySerializer, FestivalCategorySerializer, ProjectSerializer)
 from apps.tools.utils import CustomPagination
 
 
@@ -145,3 +146,10 @@ class FestivalCategoryListView(generics.ListAPIView):
     serializer_class = FestivalCategorySerializer
     permission_classes = [AllowAny]
     # pagination_class = CustomPagination
+
+
+@extend_schema(summary='Retrieving projects types.')
+class ProjectApiView(generics.ListAPIView):
+    serializer_class = ProjectSerializer
+    queryset = Project.objects.all()
+    permission_classes = [AllowAny]

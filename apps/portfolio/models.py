@@ -67,7 +67,7 @@ class ModerationAssociation(models.Model):
     comment = models.TextField(_("Comment"), default='', blank=True)
 
     def __str__(self):
-        return f"({self.profile.user.get_full_name()}) {self.type.name}"
+        return f"({self.profile.user.get_full_name()}) {self.type.name} - {self.status}"
 
 
 class AssociationPhotoProof(models.Model):
@@ -77,3 +77,26 @@ class AssociationPhotoProof(models.Model):
         related_name='photo_proof_moderation',
     )
     photo = models.ImageField(_("Association photo proof"), upload_to="proof/photo")
+
+
+class ModerationFromProject(models.Model):
+    profile = models.ForeignKey(
+        'accounts.Profile',
+        on_delete=models.CASCADE,
+        related_name='moderation_profile_from_project',
+    )
+    type = models.ForeignKey(
+        'tools.Project',
+        on_delete=models.CASCADE,
+        related_name='project_type',
+    )
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+        help_text="Status of consideration"
+    )
+    comment = models.TextField(_("Comment"), default='', blank=True)
+
+    def __str__(self):
+        return f"({self.profile.user.get_full_name()}) {self.type.name} - {self.status}"
