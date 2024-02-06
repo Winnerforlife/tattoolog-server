@@ -49,6 +49,8 @@ class ProfileFilterSerializer(serializers.ModelSerializer):
             "open_to_work",
             'mentor',
             'relocate',
+            "trusted_mentor",
+            "posted_in_journal",
             'moderation_profile_associate',
             'moderation_profile_from_project',
         )
@@ -96,6 +98,8 @@ class ProfileSerializer(serializers.ModelSerializer):
             "open_to_work",
             "mentor",
             "relocate",
+            "trusted_mentor",
+            "posted_in_journal",
             "moderation_profile_from_project",
         )
 

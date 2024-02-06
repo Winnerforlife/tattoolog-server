@@ -65,6 +65,8 @@ class Profile(models.Model):
     open_to_work = models.BooleanField(_("Open to work"), default=False)
     mentor = models.BooleanField(_("Mentor"), default=False)
     relocate = models.BooleanField(_("Ready to relocate"), default=False)
+    trusted_mentor = models.BooleanField(_("A trusted mentor/salon"), default=False)
+    posted_in_journal = models.BooleanField(_("Posted in Journal"), default=False)
 
     def delete(self, *args, **kwargs):
         self.user.is_active = False
