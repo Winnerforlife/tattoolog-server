@@ -6,7 +6,8 @@ from django.contrib import admin
 
 from apps.tools.choices import LANGUAGE_CHOICE
 from apps.tools.models import (SocialMedia, SocialMediaType, Partners, Rating, AssociationType, Festival, BlogPost,
-                               BlogBody, BlogBodyPhoto, BlogMeta, BlogPhotoCarousel, BlogCategory, FestivalCategory)
+                               BlogBody, BlogBodyPhoto, BlogMeta, BlogPhotoCarousel, BlogCategory, FestivalCategory,
+                               Project)
 
 
 @admin.register(SocialMedia)
@@ -92,4 +93,9 @@ class BlogPostAdmin(nested_admin.NestedModelAdmin):
 
 @admin.register(FestivalCategory)
 class FestivalCategoryAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Project)
+class ProjectAdmin(admin.ModelAdmin):
     pass

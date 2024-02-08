@@ -237,3 +237,11 @@ class FestivalCategory(models.Model):
     class Meta:
         verbose_name = _("Festival category")
         verbose_name_plural = _("Festival categories")
+
+
+class Project(models.Model):
+    name = models.CharField(_('Project name'), max_length=128)
+    link = models.URLField(_('Project link'), null=True, blank=True)
+
+    def __str__(self):
+        return self.name

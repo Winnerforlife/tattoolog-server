@@ -3,9 +3,11 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from apps.portfolio.filters import WorkTypeFilter
-from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation
+from apps.portfolio.models import Post, Photo, WorkType, AssociationPhotoProof, ModerationAssociation, \
+    ModerationFromProject
 from apps.portfolio.serializers import (PostSerializer, PostCreateSerializer, PhotoCreateSerializer, WorkTypeSerializer,
-                                        AssociationPhotoProofSerializer, ModerationAssociationSerializer)
+                                        AssociationPhotoProofSerializer, ModerationAssociationSerializer,
+                                        ModerationFromProjectSerializer)
 
 from apps.tools.utils import CustomPagination
 
@@ -77,4 +79,19 @@ class AssociationPhotoProofCreateView(CreateAPIView):
 class ModerationAssociationCreateView(CreateAPIView):
     serializer_class = ModerationAssociationSerializer
     queryset = ModerationAssociation.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+@extend_schema(
+    summary='Create request for moderation profile from project.',
+    description=(
+        '* profile - {profile id} (The user who applied).\n'
+        '* type - {type id} (Type of project. "/tools/projects-type/").\n'
+        '* status - {**pending**/approved/canceled} (Moderation status of the application. default=pending).\n'
+        '* comment - {string} (User comments to the moderation request).'
+    )
+)
+class ModerationFromProjectCreateView(CreateAPIView):
+    serializer_class = ModerationFromProjectSerializer
+    queryset = ModerationFromProject.objects.all()
     permission_classes = [IsAuthenticated]
