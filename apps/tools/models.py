@@ -88,6 +88,9 @@ class BlogBody(models.Model):
     title = models.CharField(_('Blog body title'), max_length=255)
     body = RichTextField(_('Blog body'))
 
+    class Meta:
+        ordering = ['id']
+
 
 class BlogBodyPhoto(models.Model):
     post = models.ForeignKey(
@@ -103,6 +106,9 @@ class BlogBodyPhoto(models.Model):
         null=True,
         blank=True
     )
+
+    class Meta:
+        ordering = ['id']
 
 
 class BlogMeta(models.Model):
