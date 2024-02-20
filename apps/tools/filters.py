@@ -50,7 +50,12 @@ class FestivalFilter(django_filters.FilterSet):
         lookup_expr='iexact',
         help_text="Filter festival objects by festival category name."
     )
+    country = django_filters.CharFilter(
+        field_name='country',
+        lookup_expr='iexact',
+        help_text="Filter festival objects by country."
+    )
 
     class Meta:
         model = Festival
-        fields = ['category']
+        fields = ['category', 'country']
