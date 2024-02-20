@@ -3,7 +3,8 @@ from cities_light.models import City, Country
 
 
 from apps.tools.models import (SocialMediaType, SocialMedia, Partners, Rating, AssociationType, Festival, BlogBodyPhoto,
-                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel, BlogCategory, FestivalCategory, Project)
+                               BlogBody, BlogMeta, BlogPost, BlogPhotoCarousel, BlogCategory, FestivalCategory, Project,
+                               FestivalPhotoSubmission, FestivalPhotoVote)
 
 
 class CountryCustomSerializer(serializers.ModelSerializer):
@@ -62,8 +63,24 @@ class FestivalCategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class FestivalPhotoSubmissionSerializer(serializers.ModelSerializer):
+    votes_count = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = FestivalPhotoSubmission
+        fields = ('id', 'image', 'votes_count')
+
+    @staticmethod
+    def get_votes_count(obj):
+        """
+        Возвращает количество голосов для фотографии.
+        """
+        return FestivalPhotoVote.objects.filter(photo_submission=obj).count()
+
+
 class FestivalSerializer(serializers.ModelSerializer):
     category = FestivalCategorySerializer(read_only=True)
+    photo_submissions = serializers.SerializerMethodField()
 
     class Meta:
         model = Festival
@@ -78,8 +95,31 @@ class FestivalSerializer(serializers.ModelSerializer):
             'date_end',
             'created_at',
             'form_url',
-            'country'
+            'country',
+            'photo_submissions'
         )
+
+    def get_photo_submissions(self, obj):
+        """
+        Фильтруем photo_submissions, чтобы возвращать только те, которые имеют статус 'approved'.
+        """
+        approved_submissions = FestivalPhotoSubmission.objects.filter(festival=obj, status='approved')
+        return FestivalPhotoSubmissionSerializer(approved_submissions, many=True, context=self.context).data
+
+
+class FestivalPhotoSubmissionCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FestivalPhotoSubmission
+        fields = ('festival', 'image')
+
+
+class FestivalPhotoVoteSerializer(serializers.ModelSerializer):
+    voter_ip = serializers.IPAddressField(read_only=True)
+
+    class Meta:
+        model = FestivalPhotoVote
+        fields = ('id', 'photo_submission', 'voted_at', 'voter_ip')
+        read_only_fields = ('voted_at',)
 
 
 class BlogBodyPhotoSerializer(serializers.ModelSerializer):
