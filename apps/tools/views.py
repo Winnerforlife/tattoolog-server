@@ -1,17 +1,19 @@
+from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
-from rest_framework import generics
+from rest_framework import generics, status
 from cities_light.models import City, Country
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import NotFound
-
+from rest_framework.response import Response
 from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter, FestivalFilter
 from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory, FestivalCategory, \
-    Project
+    Project, FestivalPhotoVote, FestivalPhotoSubmission
 from apps.tools.serializers import (CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, RatingSerializer,
                                     AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer,
-                                    BlogCategorySerializer, FestivalCategorySerializer, ProjectSerializer)
-from apps.tools.utils import CustomPagination
+                                    BlogCategorySerializer, FestivalCategorySerializer, ProjectSerializer,
+                                    FestivalPhotoVoteSerializer, FestivalPhotoSubmissionCreateSerializer)
+from apps.tools.utils import CustomPagination, get_client_ip
 
 
 @extend_schema(
@@ -153,3 +155,36 @@ class ProjectApiView(generics.ListAPIView):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [AllowAny]
+
+
+@extend_schema(
+    summary='Send a photo for moderation to participate in the contest.',
+    description=(
+            '* festival - festival id of the festival for which the photo is sent.\n'
+            '* submitted_by - User id who posted photo.'
+    )
+)
+class FestivalPhotoSubmissionCreateView(generics.CreateAPIView):
+    queryset = FestivalPhotoSubmission.objects.all()
+    serializer_class = FestivalPhotoSubmissionCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+
+@extend_schema(summary='Voting a festival photo.',)
+class FestivalPhotoVoteCreateView(generics.CreateAPIView):
+    queryset = FestivalPhotoVote.objects.all()
+    serializer_class = FestivalPhotoVoteSerializer
+    permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        voter_ip = get_client_ip(self.request)
+        serializer.save(voter_ip=voter_ip)
+
+    def post(self, request, *args, **kwargs):
+        try:
+            return super().post(request, *args, **kwargs)
+        except IntegrityError as e:
+            if 'unique constraint' in str(e) and 'voter_ip' in str(e):
+                return Response(
+                    {"detail": "This IP address has already voted today."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "An unexpected error occurred."}, status=status.HTTP_400_BAD_REQUEST)

@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 from ckeditor.fields import RichTextField
 
-from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE, PARTNER_TYPE_CHOICE
+from apps.tools.choices import LANGUAGE_CHOICE, COUNTRY_CHOICE, PARTNER_TYPE_CHOICE, STATUS_CHOICES
 
 
 class SocialMedia(models.Model):
@@ -243,6 +243,36 @@ class FestivalCategory(models.Model):
     class Meta:
         verbose_name = _("Festival category")
         verbose_name_plural = _("Festival categories")
+
+
+class FestivalPhotoSubmission(models.Model):
+    festival = models.ForeignKey(Festival, on_delete=models.CASCADE, related_name='photo_submissions')
+    image = models.ImageField(_('Image'), upload_to='festival_submission_images/')
+    submitted_at = models.DateTimeField(default=timezone.now)
+    submitted_by = models.ForeignKey(
+        "accounts.Profile",
+        on_delete=models.SET_NULL,
+        related_name='festival_photo_creater',
+        null=True,
+        blank=True
+    )
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    reviewed_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.festival.title} - Submission {self.id}"
+
+
+class FestivalPhotoVote(models.Model):
+    photo_submission = models.ForeignKey(FestivalPhotoSubmission, on_delete=models.CASCADE, related_name='votes')
+    voted_at = models.DateField(auto_now_add=True)
+    voter_ip = models.GenericIPAddressField(_('Voter IP'))
+
+    class Meta:
+        unique_together = ('photo_submission', 'voter_ip', 'voted_at')
+
+    def __str__(self):
+        return f"Vote for Submission {self.photo_submission.id} by {self.voter_ip}"
 
 
 class Project(models.Model):
