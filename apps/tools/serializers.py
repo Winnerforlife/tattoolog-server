@@ -68,7 +68,7 @@ class FestivalPhotoSubmissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FestivalPhotoSubmission
-        fields = ('id', 'image', 'votes_count')
+        fields = ('id', 'image', 'votes_count', 'submitted_by')
 
     @staticmethod
     def get_votes_count(obj):
@@ -110,7 +110,7 @@ class FestivalSerializer(serializers.ModelSerializer):
 class FestivalPhotoSubmissionCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = FestivalPhotoSubmission
-        fields = ('festival', 'image')
+        fields = ('festival', 'image', 'submitted_by')
 
 
 class FestivalPhotoVoteSerializer(serializers.ModelSerializer):

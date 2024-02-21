@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
 from rest_framework import generics, status
 from cities_light.models import City, Country
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter, FestivalFilter
@@ -12,8 +12,7 @@ from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogP
 from apps.tools.serializers import (CityCustomSerializer, CountryCustomSerializer, PartnersSerializer, RatingSerializer,
                                     AssociationTypeSerializer, FestivalSerializer, BlogPostSerializer,
                                     BlogCategorySerializer, FestivalCategorySerializer, ProjectSerializer,
-                                    FestivalPhotoVoteSerializer, FestivalPhotoSubmissionSerializer,
-                                    FestivalPhotoSubmissionCreateSerializer)
+                                    FestivalPhotoVoteSerializer, FestivalPhotoSubmissionCreateSerializer)
 from apps.tools.utils import CustomPagination, get_client_ip
 
 
@@ -158,11 +157,17 @@ class ProjectApiView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 
-@extend_schema(summary='Send a photo for moderation to participate in the contest.')
+@extend_schema(
+    summary='Send a photo for moderation to participate in the contest.',
+    description=(
+            '* festival - festival id of the festival for which the photo is sent.\n'
+            '* submitted_by - User id who posted photo.'
+    )
+)
 class FestivalPhotoSubmissionCreateView(generics.CreateAPIView):
     queryset = FestivalPhotoSubmission.objects.all()
     serializer_class = FestivalPhotoSubmissionCreateSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
 
 @extend_schema(summary='Voting a festival photo.',)

@@ -249,6 +249,13 @@ class FestivalPhotoSubmission(models.Model):
     festival = models.ForeignKey(Festival, on_delete=models.CASCADE, related_name='photo_submissions')
     image = models.ImageField(_('Image'), upload_to='festival_submission_images/')
     submitted_at = models.DateTimeField(default=timezone.now)
+    submitted_by = models.ForeignKey(
+        "accounts.Profile",
+        on_delete=models.SET_NULL,
+        related_name='festival_photo_creater',
+        null=True,
+        blank=True
+    )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     reviewed_at = models.DateTimeField(auto_now=True)
 
