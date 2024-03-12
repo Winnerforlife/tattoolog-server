@@ -119,7 +119,7 @@ class CRMIntegrationProfilesAPIView(ListAPIView):
 
 def get_object_or_none(klass, *args, **kwargs):
     try:
-        return klass.objects.get(*args, **kwargs)
+        return klass.objects.filter(*args, **kwargs).first()
     except klass.DoesNotExist:
         return None
 
