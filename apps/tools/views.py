@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema
-from rest_framework import generics
+from rest_framework import generics, status
 from cities_light.models import City, Country
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import NotFound
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from apps.tools.filters import CityLightFilter, CountryLightFilter, BlogPostsFilter, FestivalFilter
 from apps.tools.models import Partners, Rating, AssociationType, Festival, BlogPost, BlogCategory, FestivalCategory, \
@@ -153,3 +155,11 @@ class ProjectApiView(generics.ListAPIView):
     serializer_class = ProjectSerializer
     queryset = Project.objects.all()
     permission_classes = [AllowAny]
+
+
+class PrintDataView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        print("Request data: ", request.data)
+        return Response({"message": "Data received"}, status=status.HTTP_200_OK)
